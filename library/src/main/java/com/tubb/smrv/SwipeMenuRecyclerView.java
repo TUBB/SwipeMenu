@@ -9,12 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 
-/**
- * 
- * @author baoyz
- * @date 2014-8-18
- * 
- */
 public class SwipeMenuRecyclerView extends RecyclerView {
 
 	private static final int TOUCH_STATE_NONE = 0;
@@ -138,9 +132,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 			float dy = Math.abs((ev.getY() - mDownY));
 			float dx = Math.abs((ev.getX() - mDownX));
 			if (mTouchState == TOUCH_STATE_X) {
-				if (mTouchView != null) {
-					mTouchView.onSwipe(ev);
-				}
+                mTouchView.onSwipe(ev);
                 // TODO
 //				getSelector().setState(new int[]{0});
 				ev.setAction(MotionEvent.ACTION_CANCEL);
@@ -159,13 +151,11 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 			break;
 		case MotionEvent.ACTION_UP:
 			if (mTouchState == TOUCH_STATE_X) {
-				if (mTouchView != null) {
-					mTouchView.onSwipe(ev);
-					if (!mTouchView.isOpen()) {
-						mTouchPosition = -1;
-						mTouchView = null;
-					}
-				}
+                mTouchView.onSwipe(ev);
+                if (!mTouchView.isOpen()) {
+                    mTouchPosition = -1;
+                    mTouchView = null;
+                }
 				if (mOnSwipeListener != null) {
 					mOnSwipeListener.onSwipeEnd(mTouchPosition);
 				}
