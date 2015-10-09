@@ -6,7 +6,7 @@ DEMO
 ====
 ![DEMO](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/art/simple.gif)
 
-Useage
+Usage
 ======
 Similar to [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView),but your adapter must extends [SwipeMenuRecyclerViewAdapter](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/library/src/main/java/com/tubb/smrv/SwipeMenuRecyclerViewAdapter.java) class.
 Please see the sample project for details.
