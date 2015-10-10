@@ -190,7 +190,7 @@ public class DifferentMenuRvActivity extends Activity {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView) {
+        public RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView, int viewType) {
             return new MyViewHolder(itemView);
         }
 

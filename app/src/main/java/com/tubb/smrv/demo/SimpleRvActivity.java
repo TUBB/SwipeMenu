@@ -213,7 +213,7 @@ public class SimpleRvActivity extends Activity {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView) {
+        public RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView, int viewType) {
             return new MyViewHolder(itemView);
         }
 

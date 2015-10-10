@@ -27,11 +27,11 @@ public abstract class SwipeMenuRecyclerViewAdapter extends RecyclerView.Adapter
         SwipeMenuLayout layout = new SwipeMenuLayout(itemView, menuView,
                 null,
                 null);
-		return onCreateWrapViewHolder(layout);
+		return onCreateWrapViewHolder(layout, viewType);
 	}
 
     public abstract View onCreateItemView(ViewGroup viewGroup, int viewType);
-    public abstract RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView);
+    public abstract RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView, int viewType);
     public abstract void onBindWrapViewHolder(RecyclerView.ViewHolder vh, int position);
 
 	@Override
