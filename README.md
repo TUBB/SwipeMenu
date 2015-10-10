@@ -1,4 +1,4 @@
-SwipeMenuListView
+SwipeMenuRecyclerView
 =================
 A swipe menu for RecyclerView,extend from [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView).
 
