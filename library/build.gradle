@@ -1,18 +1,26 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
-version = "1.0.0"
+apply plugin: 'com.novoda.bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
+
+buildscript {
+    repositories {
+        jcenter {
+            url "http://jcenter.bintray.com/"
+        }
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.3.4'
+    }
+}
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-    resourcePrefix "swipemenurecyclerview"
 
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 1
-        versionName version
+        versionCode 4
+        versionName "1.0.3"
     }
     buildTypes {
         release {
@@ -26,83 +34,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.tubb.smrv:swipemenurecyclerview:1.0.0'
+    compile 'com.tubb.picker.library:picker:3.0'
 }
 
-def siteUrl = "https://github.com/TUBB/SwipeMenuRecyclerView"
-def gitUrl = "https://github.com/TUBB/SwipeMenuRecyclerView.git"
-group = "com.tubb.smrv"
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper paramters
-        pom {
-            project {
-                packaging 'aar'
-                name 'SwipeMenuRecyclerView'
-                url siteUrl
-
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'tubb'
-                        name 'tubb'
-                        email 'tu.bingbing@163.com'
-                    }
-                }
-
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    //bintray.user=username
-    //bintray.apikey=apikey
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-
-    pkg {
-        repo = "maven"
-        name = "SwipeMenuRecyclerView"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
+publish {
+    userOrg = 'tubb'
+    groupId = 'com.tubb.smrv'
+    artifactId = 'swipemenu-recyclerview'
+    publishVersion = '1.0.3'
+    desc = 'A swipe menu for RecyclerView'
+    website = 'https://github.com/TUBB/SwipeMenuRecyclerView'
 }
