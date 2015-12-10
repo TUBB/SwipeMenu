@@ -23,20 +23,29 @@ public abstract class SwipeMenuRecyclerViewAdapter extends RecyclerView.Adapter
         menu.setViewType(viewType);
         createMenu(menu);
         SwipeMenuView menuView = new SwipeMenuView(menu);
+        menuView.setClickable(true);
         menuView.setOnSwipeItemClickListener(this);
         SwipeMenuLayout layout = new SwipeMenuLayout(itemView, menuView,
-                null,
-                null);
+                mRecyclerView.getCloseInterpolator(),
+                mRecyclerView.getOpenInterpolator());
+        // be sure its parent able to intercept touch event
+        layout.setClickable(true);
 		return onCreateWrapViewHolder(layout, viewType);
 	}
 
     public abstract View onCreateItemView(ViewGroup viewGroup, int viewType);
     public abstract RecyclerView.ViewHolder onCreateWrapViewHolder(View itemView, int viewType);
     public abstract void onBindWrapViewHolder(RecyclerView.ViewHolder vh, int position);
+    public boolean swipeEnableByViewType(int viewType){
+        return true;
+    }
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder vh, int position) {
         SwipeMenuLayout layout = (SwipeMenuLayout) vh.itemView;
+        int viewType = getItemViewType(position);
+        layout.getMenuView().getMenu().setViewType(viewType);
+        layout.setSwipeEnable(swipeEnableByViewType(viewType));
         layout.closeMenu();
         layout.setPosition(vh);
         onBindWrapViewHolder(vh, position);

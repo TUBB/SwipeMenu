@@ -24,18 +24,14 @@
 package com.tubb.smrv.demo;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,8 +39,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
-import android.widget.ImageView;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tubb.smrv.SwipeMenu;
 import com.tubb.smrv.SwipeMenuCreator;
@@ -52,6 +49,7 @@ import com.tubb.smrv.SwipeMenuItem;
 import com.tubb.smrv.SwipeMenuRecyclerView;
 import com.tubb.smrv.SwipeMenuRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,21 +58,33 @@ import java.util.List;
  */
 public class SimpleRvActivity extends Activity {
 
-    private List<ApplicationInfo> mAppList;
+    private Context mContext;
+    private List<User> users;
     private AppAdapter mAdapter;
-    private SwipeMenuRecyclerView mListView;
+    private SwipeMenuRecyclerView mRecyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final int MENU_OPEN_TYPE = 1;
+    private static final int MENU_DELETE_TYPE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
-        mAppList = getPackageManager().getInstalledApplications(0);
-
-        mListView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
-        mListView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new AppAdapter(this, mListView, mAppList);
-        mListView.setAdapter(mAdapter);
+        mContext = this;
+        users = getUsers();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(mContext, "Refresh success", Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+        mRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter = new AppAdapter(this, mRecyclerView, users);
+        mRecyclerView.setAdapter(mAdapter);
 
         // step 1. create a MenuCreator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
@@ -84,13 +94,15 @@ public class SimpleRvActivity extends Activity {
                 // create "open" item
                 SwipeMenuItem openItem = new SwipeMenuItem(
                         getApplicationContext());
+                // set item type
+                openItem.setType(MENU_OPEN_TYPE);
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
                         0xCE)));
                 // set item width
-                openItem.setWidth(dp2px(90));
+                openItem.setWidth(dp2px(74));
                 // set item title
-                openItem.setTitle("Open");
+                openItem.setTitle("Like");
                 // set item title fontsize
                 openItem.setTitleSize(18);
                 // set item title font color
@@ -101,11 +113,13 @@ public class SimpleRvActivity extends Activity {
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
+                // set item type
+                deleteItem.setType(MENU_DELETE_TYPE);
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
                 // set item width
-                deleteItem.setWidth(dp2px(90));
+                deleteItem.setWidth(dp2px(74));
                 // set a icon
                 deleteItem.setIcon(R.drawable.ic_delete);
                 // add to menu
@@ -113,23 +127,19 @@ public class SimpleRvActivity extends Activity {
             }
         };
         // set creator
-        mListView.setMenuCreator(creator);
+        mRecyclerView.setMenuCreator(creator);
 
         // step 2. listener item click event
-        mListView.setOnMenuItemClickListener(new SwipeMenuRecyclerView.OnMenuItemClickListener() {
+        mRecyclerView.setOnMenuItemClickListener(new SwipeMenuRecyclerView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                ApplicationInfo item = mAppList.get(position);
-                switch (index) {
-                    case 0:
-                        // open
-                        open(item);
+                SwipeMenuItem swipeMenuItem = menu.getMenuItem(index);
+                switch (swipeMenuItem.getType()) {
+                    case MENU_OPEN_TYPE:
+                        Toast.makeText(mContext, "Like +1", Toast.LENGTH_LONG).show();
                         break;
-                    case 1:
-                        // delete
-//					delete(item);
-                        Log.e("captain", "position--->" + position);
-                        mAppList.remove(position);
+                    case MENU_DELETE_TYPE:
+                        users.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         break;
                 }
@@ -138,7 +148,7 @@ public class SimpleRvActivity extends Activity {
         });
 
         // set SwipeListener
-        mListView.setOnSwipeListener(new SwipeMenuRecyclerView.OnSwipeListener() {
+        mRecyclerView.setOnSwipeListener(new SwipeMenuRecyclerView.OnSwipeListener() {
 
             @Override
             public void onSwipeStart(int position) {
@@ -152,49 +162,32 @@ public class SimpleRvActivity extends Activity {
         });
 
         // other setting
-		mListView.setCloseInterpolator(new BounceInterpolator());
+        mRecyclerView.setOpenInterpolator(new BounceInterpolator());
+		mRecyclerView.setCloseInterpolator(new BounceInterpolator());
 
     }
 
-    private void delete(ApplicationInfo item) {
-        // delete app
-        try {
-            Intent intent = new Intent(Intent.ACTION_DELETE);
-            intent.setData(Uri.fromParts("package", item.packageName, null));
-            startActivity(intent);
-        } catch (Exception e) {
+    private List<User> getUsers() {
+        List<User> userList = new ArrayList<>();
+        for (int i=0; i<100; i++){
+            User user = new User();
+            user.userId = i+1000;
+            user.userName = "Pobi "+(i+1);
+            userList.add(user);
         }
+        return userList;
     }
 
-    private void open(ApplicationInfo item) {
-        // open app
-        Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-        resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        resolveIntent.setPackage(item.packageName);
-        List<ResolveInfo> resolveInfoList = getPackageManager()
-                .queryIntentActivities(resolveIntent, 0);
-        if (resolveInfoList != null && resolveInfoList.size() > 0) {
-            ResolveInfo resolveInfo = resolveInfoList.get(0);
-            String activityPackageName = resolveInfo.activityInfo.packageName;
-            String className = resolveInfo.activityInfo.name;
+    class AppAdapter extends SwipeMenuRecyclerViewAdapter {
 
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            ComponentName componentName = new ComponentName(
-                    activityPackageName, className);
+        private static final int VIEW_TYPE_ENABLE = 0;
+        private static final int VIEW_TYPE_DISABLE = 1;
 
-            intent.setComponent(componentName);
-            startActivity(intent);
-        }
-    }
+        List<User> users;
 
-    public static class AppAdapter extends SwipeMenuRecyclerViewAdapter {
-
-        List<ApplicationInfo> mAppList;
-
-        public AppAdapter(Context context, SwipeMenuRecyclerView rv, List<ApplicationInfo> appList){
+        public AppAdapter(Context context, SwipeMenuRecyclerView rv, List<User> users){
             super(context, rv);
-            mAppList = appList;
+            this.users = users;
         }
 
         @Override
@@ -204,7 +197,24 @@ public class SimpleRvActivity extends Activity {
 
         @Override
         public int getItemCount() {
-            return mAppList.size();
+            return users.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            User user = users.get(position);
+            if(user.userId % 2 == 0){
+                return VIEW_TYPE_DISABLE;
+            }else{
+                return VIEW_TYPE_ENABLE;
+            }
+        }
+
+        @Override
+        public boolean swipeEnableByViewType(int viewType) {
+            if(viewType == VIEW_TYPE_ENABLE) return true;
+            else if(viewType == VIEW_TYPE_DISABLE) return false;
+            else return true; // default
         }
 
         @Override
@@ -218,23 +228,36 @@ public class SimpleRvActivity extends Activity {
         }
 
         @Override
-        public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, int position) {
-            ApplicationInfo item = mAppList.get(position);
-            MyViewHolder myViewHolder = (MyViewHolder)vh;
-            myViewHolder.iv_icon.setImageDrawable(item.loadIcon(myViewHolder.itemView.getContext().getPackageManager()));
-            myViewHolder.tv_name.setText(item.loadLabel(myViewHolder.itemView.getContext().getPackageManager()));
+        public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, final int position) {
+            final User user = users.get(position);
+            final MyViewHolder myViewHolder = (MyViewHolder)vh;
+            myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Hi", Toast.LENGTH_LONG).show();
+                }
+            });
+            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(myViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
+                }
+            });
+            myViewHolder.tvName.setText(user.userName);
+            boolean swipeEnable = swipeEnableByViewType(getItemViewType(position));
+            myViewHolder.tvSwipeEnable.setText(swipeEnable?"swipe on":"swipe off");
         }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        ViewGroup vg;
-        ImageView iv_icon;
-        TextView tv_name;
+        TextView tvName;
+        TextView tvSwipeEnable;
+        View btGood;
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.vg = (ViewGroup)itemView;
-            iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvSwipeEnable = (TextView) itemView.findViewById(R.id.tvSwipeEnable);
+            btGood = itemView.findViewById(R.id.btGood);
         }
     }
 
@@ -254,14 +277,19 @@ public class SimpleRvActivity extends Activity {
         int id = item.getItemId();
 
         if (id == R.id.action_left) {
-            mListView.setSwipeDirection(SwipeMenuRecyclerView.DIRECTION_LEFT);
+            mRecyclerView.setSwipeDirection(SwipeMenuRecyclerView.DIRECTION_LEFT);
             return true;
         }
         if (id == R.id.action_right) {
-            mListView.setSwipeDirection(SwipeMenuRecyclerView.DIRECTION_RIGHT);
+            mRecyclerView.setSwipeDirection(SwipeMenuRecyclerView.DIRECTION_RIGHT);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class User{
+        public int userId;
+        public String userName;
     }
 }

@@ -29,13 +29,13 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +45,7 @@ import com.tubb.smrv.SwipeMenuItem;
 import com.tubb.smrv.SwipeMenuRecyclerView;
 import com.tubb.smrv.SwipeMenuRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +54,19 @@ import java.util.List;
  */
 public class DifferentMenuRvActivity extends Activity {
 
-    private List<ApplicationInfo> mAppList;
+    private static final int VIEW_TYPE_1 = 0;
+    private static final int VIEW_TYPE_2 = 1;
+    private static final int VIEW_TYPE_3 = 2;
+
+    private static final int ACTION_FAVORITE = 1;
+    private static final int ACTION_GOOD = 2;
+    private static final int ACTION_IMPORTANT = 3;
+    private static final int ACTION_DISCARD = 4;
+    private static final int ACTION_ABOUT = 5;
+    private static final int ACTION_SHARE = 6;
+
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private List<User> users;
     private AppAdapter mAdapter;
 
     @Override
@@ -61,11 +74,18 @@ public class DifferentMenuRvActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
-        mAppList = getPackageManager().getInstalledApplications(0);
-
+        users = getUsers();
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(DifferentMenuRvActivity.this, "Refresh success", Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         final SwipeMenuRecyclerView listView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
         listView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new AppAdapter(this, listView, mAppList);
+        mAdapter = new AppAdapter(this, listView, users);
         listView.setAdapter(mAdapter);
 
         // step 1. create a MenuCreator
@@ -75,13 +95,13 @@ public class DifferentMenuRvActivity extends Activity {
             public void create(SwipeMenu menu) {
                 // Create different menus depending on the view type
                 switch (menu.getViewType()) {
-                    case 0:
+                    case VIEW_TYPE_1:
                         createMenu1(menu);
                         break;
-                    case 1:
+                    case VIEW_TYPE_2:
                         createMenu2(menu);
                         break;
-                    case 2:
+                    case VIEW_TYPE_3:
                         createMenu3(menu);
                         break;
                 }
@@ -90,13 +110,16 @@ public class DifferentMenuRvActivity extends Activity {
             private void createMenu1(SwipeMenu menu) {
                 SwipeMenuItem item1 = new SwipeMenuItem(
                         getApplicationContext());
+                item1.setType(ACTION_FAVORITE);
                 item1.setBackground(new ColorDrawable(Color.rgb(0xE5, 0x18,
                         0x5E)));
                 item1.setWidth(dp2px(90));
                 item1.setIcon(R.drawable.ic_action_favorite);
                 menu.addMenuItem(item1);
+
                 SwipeMenuItem item2 = new SwipeMenuItem(
                         getApplicationContext());
+                item2.setType(ACTION_GOOD);
                 item2.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
                         0xCE)));
                 item2.setWidth(dp2px(90));
@@ -107,13 +130,16 @@ public class DifferentMenuRvActivity extends Activity {
             private void createMenu2(SwipeMenu menu) {
                 SwipeMenuItem item1 = new SwipeMenuItem(
                         getApplicationContext());
+                item1.setType(ACTION_IMPORTANT);
                 item1.setBackground(new ColorDrawable(Color.rgb(0xE5, 0xE0,
                         0x3F)));
                 item1.setWidth(dp2px(90));
                 item1.setIcon(R.drawable.ic_action_important);
                 menu.addMenuItem(item1);
+
                 SwipeMenuItem item2 = new SwipeMenuItem(
                         getApplicationContext());
+                item2.setType(ACTION_DISCARD);
                 item2.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
                 item2.setWidth(dp2px(90));
@@ -124,6 +150,7 @@ public class DifferentMenuRvActivity extends Activity {
             private void createMenu3(SwipeMenu menu) {
                 SwipeMenuItem item1 = new SwipeMenuItem(
                         getApplicationContext());
+                item1.setType(ACTION_ABOUT);
                 item1.setBackground(new ColorDrawable(Color.rgb(0x30, 0xB1,
                         0xF5)));
                 item1.setWidth(dp2px(90));
@@ -131,6 +158,7 @@ public class DifferentMenuRvActivity extends Activity {
                 menu.addMenuItem(item1);
                 SwipeMenuItem item2 = new SwipeMenuItem(
                         getApplicationContext());
+                item2.setType(ACTION_SHARE);
                 item2.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
                         0xCE)));
                 item2.setWidth(dp2px(90));
@@ -145,13 +173,26 @@ public class DifferentMenuRvActivity extends Activity {
         listView.setOnMenuItemClickListener(new SwipeMenuRecyclerView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                ApplicationInfo item = mAppList.get(position);
-                switch (index) {
-                    case 0:
-                        Toast.makeText(DifferentMenuRvActivity.this, "Click menu position 0", Toast.LENGTH_SHORT).show();
+                String userName = users.get(position).userName;
+                SwipeMenuItem swipeMenuItem = menu.getMenuItem(index);
+                switch (swipeMenuItem.getType()) {
+                    case ACTION_FAVORITE:
+                        Toast.makeText(DifferentMenuRvActivity.this, "favorite " + userName, Toast.LENGTH_SHORT).show();
                         break;
-                    case 1:
-                        Toast.makeText(DifferentMenuRvActivity.this, "Click menu position 1", Toast.LENGTH_SHORT).show();
+                    case ACTION_ABOUT:
+                        Toast.makeText(DifferentMenuRvActivity.this, "about " + userName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACTION_DISCARD:
+                        Toast.makeText(DifferentMenuRvActivity.this, "discard " + userName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACTION_GOOD:
+                        Toast.makeText(DifferentMenuRvActivity.this, "good " + userName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACTION_IMPORTANT:
+                        Toast.makeText(DifferentMenuRvActivity.this, "important " + userName, Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACTION_SHARE:
+                        Toast.makeText(DifferentMenuRvActivity.this, "share " + userName, Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return false;
@@ -162,11 +203,11 @@ public class DifferentMenuRvActivity extends Activity {
 
     public static class AppAdapter extends SwipeMenuRecyclerViewAdapter {
 
-        List<ApplicationInfo> mAppList;
+        List<User> users;
 
-        public AppAdapter(Context context, SwipeMenuRecyclerView rv, List<ApplicationInfo> appList){
+        public AppAdapter(Context context, SwipeMenuRecyclerView rv, List<User> users){
             super(context, rv);
-            mAppList = appList;
+            this.users = users;
         }
 
         @Override
@@ -176,12 +217,16 @@ public class DifferentMenuRvActivity extends Activity {
 
         @Override
         public int getItemCount() {
-            return mAppList.size();
+            return users.size();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return position % 3;
+            int left = position % 3;
+            if(left == 0) return VIEW_TYPE_1;
+            else if(left == 1) return VIEW_TYPE_2;
+            else if(left == 2) return VIEW_TYPE_3;
+            return left;
         }
 
         @Override
@@ -196,27 +241,47 @@ public class DifferentMenuRvActivity extends Activity {
 
         @Override
         public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, int position) {
-            ApplicationInfo item = mAppList.get(position);
-            MyViewHolder myViewHolder = (MyViewHolder)vh;
-            myViewHolder.iv_icon.setImageDrawable(item.loadIcon(myViewHolder.itemView.getContext().getPackageManager()));
-            myViewHolder.tv_name.setText(item.loadLabel(myViewHolder.itemView.getContext().getPackageManager()));
+            User user = users.get(position);
+            final MyViewHolder myViewHolder = (MyViewHolder)vh;
+            myViewHolder.tvName.setText(user.userName);
+            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(myViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
+
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        ViewGroup vg;
-        ImageView iv_icon;
-        TextView tv_name;
+        TextView tvName;
+        View btGood;
         public MyViewHolder(View itemView) {
             super(itemView);
-            this.vg = (ViewGroup)itemView;
-            iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
-            tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            btGood = itemView.findViewById(R.id.btGood);
         }
     }
 
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
+    }
+
+    private List<User> getUsers() {
+        List<User> userList = new ArrayList<>();
+        for (int i=0; i<100; i++){
+            User user = new User();
+            user.userId = i+1000;
+            user.userName = "Pobi "+(i+1);
+            userList.add(user);
+        }
+        return userList;
+    }
+
+    class User{
+        public int userId;
+        public String userName;
     }
 }

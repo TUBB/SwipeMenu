@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 public class SwipeMenuItem {
 
 	private int id;
+	private int type;
 	private Context mContext;
 	private String title;
 	private Drawable icon;
@@ -93,4 +94,11 @@ public class SwipeMenuItem {
 		this.width = width;
 	}
 
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getType() {
+		return type;
+	}
 }
