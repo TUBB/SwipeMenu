@@ -33,6 +33,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,7 +47,9 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.tubb.smrv.SwipeMenu;
 import com.tubb.smrv.SwipeMenuCreator;
 import com.tubb.smrv.SwipeMenuItem;
@@ -60,17 +64,29 @@ import java.util.List;
  */
 public class SimpleRvActivity extends Activity {
 
+    private Context mContext;
     private List<ApplicationInfo> mAppList;
     private AppAdapter mAdapter;
     private SwipeMenuRecyclerView mListView;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private static final int MENU_OPEN_TYPE = 1;
+    private static final int MENU_DELETE_TYPE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
-
+        mContext = this;
         mAppList = getPackageManager().getInstalledApplications(0);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Toast.makeText(mContext, "刷新成功", Toast.LENGTH_LONG).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         mListView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
         mListView.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new AppAdapter(this, mListView, mAppList);
@@ -84,6 +100,8 @@ public class SimpleRvActivity extends Activity {
                 // create "open" item
                 SwipeMenuItem openItem = new SwipeMenuItem(
                         getApplicationContext());
+                // set item type
+                openItem.setType(MENU_OPEN_TYPE);
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
                         0xCE)));
@@ -101,6 +119,8 @@ public class SimpleRvActivity extends Activity {
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
+                // set item type
+                deleteItem.setType(MENU_DELETE_TYPE);
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
@@ -120,15 +140,12 @@ public class SimpleRvActivity extends Activity {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 ApplicationInfo item = mAppList.get(position);
-                switch (index) {
-                    case 0:
-                        // open
+                SwipeMenuItem swipeMenuItem = menu.getMenuItem(index);
+                switch (swipeMenuItem.getType()) {
+                    case MENU_OPEN_TYPE:
                         open(item);
                         break;
-                    case 1:
-                        // delete
-//					delete(item);
-                        Log.e("captain", "position--->" + position);
+                    case MENU_DELETE_TYPE:
                         mAppList.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         break;
@@ -156,16 +173,6 @@ public class SimpleRvActivity extends Activity {
 
     }
 
-    private void delete(ApplicationInfo item) {
-        // delete app
-        try {
-            Intent intent = new Intent(Intent.ACTION_DELETE);
-            intent.setData(Uri.fromParts("package", item.packageName, null));
-            startActivity(intent);
-        } catch (Exception e) {
-        }
-    }
-
     private void open(ApplicationInfo item) {
         // open app
         Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
@@ -188,7 +195,10 @@ public class SimpleRvActivity extends Activity {
         }
     }
 
-    public static class AppAdapter extends SwipeMenuRecyclerViewAdapter {
+    class AppAdapter extends SwipeMenuRecyclerViewAdapter {
+
+        private static final int VIEW_TYPE_ENABLE = 0;
+        private static final int VIEW_TYPE_DISABLE = 1;
 
         List<ApplicationInfo> mAppList;
 
@@ -208,6 +218,22 @@ public class SimpleRvActivity extends Activity {
         }
 
         @Override
+        public int getItemViewType(int position) {
+            if(position % 2 == 0){
+                return VIEW_TYPE_DISABLE;
+            }else{
+                return VIEW_TYPE_ENABLE;
+            }
+        }
+
+        @Override
+        public boolean swipeEnableByViewType(int viewType) {
+            if(viewType == VIEW_TYPE_ENABLE) return true;
+            else if(viewType == VIEW_TYPE_DISABLE) return false;
+            else return true; // default
+        }
+
+        @Override
         public View onCreateItemView(ViewGroup viewGroup, int viewType) {
             return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_app, viewGroup, false);
         }
@@ -218,10 +244,21 @@ public class SimpleRvActivity extends Activity {
         }
 
         @Override
-        public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, int position) {
-            ApplicationInfo item = mAppList.get(position);
-            MyViewHolder myViewHolder = (MyViewHolder)vh;
-            myViewHolder.iv_icon.setImageDrawable(item.loadIcon(myViewHolder.itemView.getContext().getPackageManager()));
+        public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, final int position) {
+            final ApplicationInfo item = mAppList.get(position);
+            final MyViewHolder myViewHolder = (MyViewHolder)vh;
+            myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    open(item);
+                }
+            });
+            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(myViewHolder.itemView.getContext(), "Good Button", Toast.LENGTH_SHORT).show();
+                }
+            });
             myViewHolder.tv_name.setText(item.loadLabel(myViewHolder.itemView.getContext().getPackageManager()));
         }
     }
@@ -230,11 +267,13 @@ public class SimpleRvActivity extends Activity {
         ViewGroup vg;
         ImageView iv_icon;
         TextView tv_name;
+        View btGood;
         public MyViewHolder(View itemView) {
             super(itemView);
             this.vg = (ViewGroup)itemView;
             iv_icon = (ImageView) itemView.findViewById(R.id.iv_icon);
             tv_name = (TextView) itemView.findViewById(R.id.tv_name);
+            btGood = itemView.findViewById(R.id.btGood);
         }
     }
 

@@ -1,12 +1,17 @@
 package com.tubb.smrv;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 
 public class SwipeMenuRecyclerView extends RecyclerView {
@@ -19,8 +24,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 	public static final int DIRECTION_RIGHT = -1;
 	private int mDirection = 1;//swipe from right to left by default
 
-	private int MAX_Y = 5;
-	private int MAX_X = 3;
 	private float mDownX;
 	private float mDownY;
 	private int mTouchState;
@@ -34,8 +37,12 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 	private Interpolator mOpenInterpolator;
 
 	private LinearLayoutManager mLlm;
+    private ViewConfiguration mViewConfiguration;
+    private long startClickTime;
+    private float dx;
+    private float dy;
 
-	public SwipeMenuRecyclerView(Context context) {
+    public SwipeMenuRecyclerView(Context context) {
 		super(context);
 		init();
 	}
@@ -51,9 +58,8 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 	}
 
 	private void init() {
-		MAX_X = dp2px(MAX_X);
-		MAX_Y = dp2px(MAX_Y);
 		mTouchState = TOUCH_STATE_NONE;
+		mViewConfiguration = ViewConfiguration.get(getContext());
 	}
 
 	@Override
@@ -79,118 +85,140 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 		return mCloseInterpolator;
 	}
 
-	@Override
-	public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return super.onInterceptTouchEvent(ev);
-	}
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
 
-	@Override
-	public boolean onTouchEvent(MotionEvent ev) {
-		if (ev.getAction() != MotionEvent.ACTION_DOWN && mTouchView == null){
-            return super.onTouchEvent(ev);
+        if (ev.getAction() != MotionEvent.ACTION_DOWN && mTouchView == null){
+            return super.onInterceptTouchEvent(ev);
         }
-		mLlm = (LinearLayoutManager)getLayoutManager();
-//		int action = MotionEventCompat.getActionMasked(ev);
-		int action = ev.getAction();
-		switch (action) {
-		case MotionEvent.ACTION_DOWN:
-			int oldPos = mTouchPosition;
-			mDownX = ev.getX();
-			mDownY = ev.getY();
-			mTouchState = TOUCH_STATE_NONE;
 
-			mTouchPosition = getChildAdapterPosition(findChildViewUnder((int) ev.getX(), (int) ev.getY()));
-
-			if (mTouchPosition == oldPos && mTouchView != null
-					&& mTouchView.isOpen()) {
-				mTouchState = TOUCH_STATE_X;
-				mTouchView.onSwipe(ev);
-				return true;
-			}
-
-			View view = getChildAt(mTouchPosition - mLlm.findFirstVisibleItemPosition());
-
-			if (mTouchView != null && mTouchView.isOpen()) {
-				mTouchView.smoothCloseMenu();
-				mTouchView = null;
-				// return super.onTouchEvent(ev);
-				// try to cancel the touch event
-				MotionEvent cancelEvent = MotionEvent.obtain(ev);  
-				cancelEvent.setAction(MotionEvent.ACTION_CANCEL);    
-				onTouchEvent(cancelEvent);
-				return true;
-			}
-			if (view instanceof SwipeMenuLayout) {
-				mTouchView = (SwipeMenuLayout) view;
-				mTouchView.setSwipeDirection(mDirection);
-			}
-			if (mTouchView != null) {
-				mTouchView.onSwipe(ev);
-			}
-			break;
-		case MotionEvent.ACTION_MOVE:
-			float dy = Math.abs((ev.getY() - mDownY));
-			float dx = Math.abs((ev.getX() - mDownX));
-			if (mTouchState == TOUCH_STATE_X) {
-                mTouchView.onSwipe(ev);
-                // TODO
-//				getSelector().setState(new int[]{0});
-				ev.setAction(MotionEvent.ACTION_CANCEL);
-				super.onTouchEvent(ev);
-				return true;
-			} else if (mTouchState == TOUCH_STATE_NONE) {
-				if (Math.abs(dy) > MAX_Y) {
-					mTouchState = TOUCH_STATE_Y;
-				} else if (dx > MAX_X) {
-					mTouchState = TOUCH_STATE_X;
-					if (mOnSwipeListener != null) {
-						mOnSwipeListener.onSwipeStart(mTouchPosition);
-					}
-				}
-			}
-			break;
-		case MotionEvent.ACTION_UP:
-			if (mTouchState == TOUCH_STATE_X) {
-                mTouchView.onSwipe(ev);
-                if (!mTouchView.isOpen()) {
-                    mTouchPosition = -1;
-                    mTouchView = null;
+        int action = ev.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                dx = 0.0f; // reset
+                dy = 0.0f; // reset
+                startClickTime = System.currentTimeMillis(); // reset
+                int oldPos = mTouchPosition;
+                mDownX = ev.getX();
+                mDownY = ev.getY();
+                mTouchState = TOUCH_STATE_NONE;
+                mTouchPosition = getChildAdapterPosition(findChildViewUnder((int) ev.getX(), (int) ev.getY()));
+                if (mTouchPosition == oldPos && mTouchView != null
+                        && mTouchView.isOpen()) {
+                    mTouchState = TOUCH_STATE_X;
+                    mTouchView.onSwipe(ev);
                 }
-				if (mOnSwipeListener != null) {
-					mOnSwipeListener.onSwipeEnd(mTouchPosition);
-				}
-				ev.setAction(MotionEvent.ACTION_CANCEL);
-				super.onTouchEvent(ev);
-				return true;
-			}
-			break;
-		}
-		return super.onTouchEvent(ev);
-	}
+                View view = getChildAt(mTouchPosition - mLlm.findFirstVisibleItemPosition());
+                // is not touched the opened menu view, so we intercept this touch event
+                if (mTouchPosition != oldPos && mTouchView != null && mTouchView.isOpen()) {
+                    mTouchView.smoothCloseMenu();
+                    mTouchView = null;
+                    // try to cancel the touch event
+                    MotionEvent cancelEvent = MotionEvent.obtain(ev);
+                    cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(cancelEvent);
+                    return true;
+                }
+                if (view instanceof SwipeMenuLayout) {
+                    mTouchView = (SwipeMenuLayout) view;
+                    mTouchView.setSwipeDirection(mDirection);
+                }
+                if (mTouchView != null) {
+                    mTouchView.onSwipe(ev);
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                dy = Math.abs((ev.getY() - mDownY));
+                dx = Math.abs((ev.getX() - mDownX));
+                if (mTouchState == TOUCH_STATE_X && mTouchView.isSwipeEnable()) {
+                    mTouchView.onSwipe(ev);
+                    ev.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(ev);
+                } else if (mTouchState == TOUCH_STATE_NONE && mTouchView.isSwipeEnable()) {
+                    if (Math.abs(dy) > mViewConfiguration.getScaledTouchSlop()) {
+                        mTouchState = TOUCH_STATE_Y;
+                    } else if (dx > mViewConfiguration.getScaledTouchSlop()) {
+                        mTouchState = TOUCH_STATE_X;
+                        if (mOnSwipeListener != null) {
+                            mOnSwipeListener.onSwipeStart(mTouchPosition);
+                        }
+                    }
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                boolean isCloseOnUpEvent = false;
+                if (mTouchState == TOUCH_STATE_X) {
+                    isCloseOnUpEvent = !mTouchView.onSwipe(ev);
+                    if (!mTouchView.isOpen()) {
+                        mTouchPosition = -1;
+                        mTouchView = null;
+                    }
+                    if (mOnSwipeListener != null) {
+                        mOnSwipeListener.onSwipeEnd(mTouchPosition);
+                    }
+                    ev.setAction(MotionEvent.ACTION_CANCEL);
+                    super.onTouchEvent(ev);
+                }
+                long clickDuration = System.currentTimeMillis() - startClickTime;
+                boolean isOutDuration = clickDuration > ViewConfiguration.getLongPressTimeout();
+                boolean isOutX = dx > mViewConfiguration.getScaledTouchSlop();
+                boolean isOutY = dy > mViewConfiguration.getScaledTouchSlop();
+                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
+                // long pressed or scaled touch, we just intercept up touch event
+                if(isOutDuration || isOutX || isOutY){
+                    return true;
+                }else{
+                    float eX = ev.getX();
+                    float eY = ev.getY();
+                    View upView = findChildViewUnder(eX, eY);
+                    if(upView instanceof SwipeMenuLayout){
+                        SwipeMenuLayout smView = (SwipeMenuLayout)upView;
+                        int x = (int)eX - smView.getLeft();
+                        int y = (int)eY - smView.getTop();
+                        SwipeMenuView menuView = smView.getMenuView();
+                        final float translationX = ViewCompat.getTranslationX(menuView);
+                        final float translationY = ViewCompat.getTranslationY(menuView);
+                        // intercept the up event when touched on the contentView of the opened SwipeMenuLayout
+                        if (!(x >= menuView.getLeft() + translationX &&
+                                x <= menuView.getRight() + translationX &&
+                                y >= menuView.getTop() + translationY &&
+                                y <= menuView.getBottom() + translationY) && isCloseOnUpEvent) {
+                            return true;
+                        }
+                    }
+                }
+                break;
+        }
+
+        return super.onInterceptTouchEvent(ev);
+    }
 
 	public void smoothOpenMenu(int position) {
-		mLlm = (LinearLayoutManager)getLayoutManager();
-		if (position >= mLlm.findFirstVisibleItemPosition()
-				&& position <= mLlm.findLastVisibleItemPosition()) {
-			View view = getChildAt(position - mLlm.findFirstVisibleItemPosition());
-			if (view instanceof SwipeMenuLayout) {
-				mTouchPosition = position;
-				if (mTouchView != null && mTouchView.isOpen()) {
-					mTouchView.smoothCloseMenu();
-				}
-				mTouchView = (SwipeMenuLayout) view;
-				mTouchView.setSwipeDirection(mDirection);
-				mTouchView.smoothOpenMenu();
-			}
-		}
+        View view = mLlm.findViewByPosition(position);
+        if (view instanceof SwipeMenuLayout) {
+            mTouchPosition = position;
+            // close pre opened swipe menu
+            if (mTouchView != null && mTouchView.isOpen()) {
+                mTouchView.smoothCloseMenu();
+            }
+            mTouchView = (SwipeMenuLayout) view;
+            mTouchView.setSwipeDirection(mDirection);
+            mTouchView.smoothOpenMenu();
+        }
 	}
 
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getContext().getResources().getDisplayMetrics());
-	}
+    public void smoothCloseMenu(int position) {
+        View view = mLlm.findViewByPosition(position);
+        if (view instanceof SwipeMenuLayout) {
+            // close the opened swipe menu
+            if (mTouchView != null && mTouchView.isOpen()) {
+                mTouchView.smoothCloseMenu();
+            }
+        }
+    }
 
-	public void setMenuCreator(SwipeMenuCreator menuCreator) {
+
+    public void setMenuCreator(SwipeMenuCreator menuCreator) {
 		this.mMenuCreator = menuCreator;
 	}
 
@@ -215,11 +243,11 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 		return mOnMenuItemClickListener;
 	}
 
-	public static interface OnMenuItemClickListener {
+	public interface OnMenuItemClickListener {
 		boolean onMenuItemClick(int position, SwipeMenu menu, int index);
 	}
 
-	public static interface OnSwipeListener {
+	public interface OnSwipeListener {
 		void onSwipeStart(int position);
 
 		void onSwipeEnd(int position);
@@ -228,4 +256,13 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 	public void setSwipeDirection(int direction) {
 		mDirection = direction;
 	}
+
+    @Override
+    public void setLayoutManager(LayoutManager layout) {
+        super.setLayoutManager(layout);
+        if(!(layout instanceof LinearLayoutManager)){
+            throw new IllegalArgumentException("not support " + layout.getClass().getSimpleName() + " yet.");
+        }
+        mLlm = (LinearLayoutManager)layout;
+    }
 }

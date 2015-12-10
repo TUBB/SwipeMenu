@@ -201,6 +201,7 @@ public class DifferentMenuRvActivity extends Activity {
             myViewHolder.iv_icon.setImageDrawable(item.loadIcon(myViewHolder.itemView.getContext().getPackageManager()));
             myViewHolder.tv_name.setText(item.loadLabel(myViewHolder.itemView.getContext().getPackageManager()));
         }
+
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
