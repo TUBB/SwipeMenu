@@ -11,7 +11,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:1.0.3'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:2.0.0'
 }
 ```
 Similar to [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView).
