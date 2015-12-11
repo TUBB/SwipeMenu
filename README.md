@@ -4,7 +4,7 @@ A swipe menu for RecyclerView,extend from [SwipeMenuListView](https://github.com
 
 DEMO
 ====
-![DEMO](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/art/simple.gif)
+![DEMO](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/art/demo.gif)
 
 Usage
 ======
@@ -14,5 +14,12 @@ dependencies {
     compile 'com.tubb.smrv:swipemenu-recyclerview:1.0.3'
 }
 ```
-Similar to [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView),but your adapter must extends [SwipeMenuRecyclerViewAdapter](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/library/src/main/java/com/tubb/smrv/SwipeMenuRecyclerViewAdapter.java) class.
-Please see the sample project for details.
+Similar to [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView).
+More details please see the demo project.
+
+New features
+============
+    support LinearLayoutManager and GridLayoutManager for RecyclerView
+    on-off swipe ability
+    not intercept item touch event
+    good expansibility, your can extend SwipeMenuRecyclerView for custom logic

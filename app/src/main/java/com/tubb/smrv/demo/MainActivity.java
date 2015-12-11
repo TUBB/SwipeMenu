@@ -49,6 +49,9 @@ public class MainActivity extends Activity {
             case R.id.button2:
                 startActivity(new Intent(this, DifferentMenuRvActivity.class));
                 break;
+            case R.id.button3:
+                startActivity(new Intent(this, GridLayoutManagerRvActivity.class));
+                break;
         }
     }
 }

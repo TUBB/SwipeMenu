@@ -93,7 +93,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         int action = ev.getAction();
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                Log.e("XX", "down event");
+//                Log.e("XX", "down event");
                 dx = 0.0f; // reset
                 dy = 0.0f; // reset
                 startClickTime = System.currentTimeMillis(); // reset
@@ -116,7 +116,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                     MotionEvent cancelEvent = MotionEvent.obtain(ev);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
                     super.onTouchEvent(cancelEvent);
-                    Log.e("XX", "intercept down event");
+//                    Log.e("XX", "intercept down event");
                     return true;
                 }
                 if (view instanceof SwipeMenuLayout) {
@@ -147,7 +147,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 break;
             case MotionEvent.ACTION_UP:
                 boolean isCloseOnUpEvent = false;
-                Log.e("XX", "up evnet");
+//                Log.e("XX", "up evnet");
                 if (mTouchState == TOUCH_STATE_X && mTouchView.isSwipeEnable()) {
                     isCloseOnUpEvent = !mTouchView.onSwipe(ev);
                     if (!mTouchView.isOpen()) {
@@ -164,7 +164,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 boolean isOutDuration = clickDuration > ViewConfiguration.getLongPressTimeout();
                 boolean isOutX = dx > mViewConfiguration.getScaledTouchSlop();
                 boolean isOutY = dy > mViewConfiguration.getScaledTouchSlop();
-                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
+//                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
                 // long pressed or scaled touch, we just intercept up touch event
                 if(isOutDuration || isOutX || isOutY){
                     return true;

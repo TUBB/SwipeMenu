@@ -21,15 +21,6 @@
         android:textSize="18sp"
         />
 
-    <Button
-        android:id="@+id/btGood"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:text="Good"
-        android:layout_centerVertical="true"/>
-
     <TextView
         android:id="@+id/tvSwipeEnable"
         android:layout_width="wrap_content"
@@ -39,7 +30,7 @@
         android:textColor="#e77777"
         tools:text="swipe"
         android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/btGood"
+        android:layout_alignParentRight="true"
         />
 
     <View
