@@ -6,7 +6,6 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -103,8 +102,7 @@ public class SwipeMenuLayout extends FrameLayout {
 
                 if(velocityX > mViewConfiguration.getScaledMinimumFlingVelocity() || velocityY > mViewConfiguration.getScaledMinimumFlingVelocity())
                     isFling = true;
-
-                Log.e("XX", "isFling:"+isFling);
+//                Log.e("XX", "isFling:"+isFling);
                 return isFling;
             }
         };
@@ -185,11 +183,11 @@ public class SwipeMenuLayout extends FrameLayout {
 			if ((isFling || Math.abs(mDownX - event.getX()) > (mMenuView.getWidth() / 3)) &&
 					Math.signum(mDownX - event.getX()) == mSwipeDirection) {
 				// open
-                Log.e("XX", "open");
+//                Log.e("XX", "open");
 				smoothOpenMenu();
 			} else {
 				// close
-                Log.e("XX", "close");
+//                Log.e("XX", "close");
 				smoothCloseMenu();
 				return false;
 			}
