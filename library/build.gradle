@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 23
-        versionCode 6
-        versionName "2.0.1"
+        versionCode 7
+        versionName "3.0.0"
     }
     buildTypes {
         release {
@@ -28,6 +28,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -40,7 +44,7 @@ publish {
     userOrg = 'tubb'
     groupId = 'com.tubb.smrv'
     artifactId = 'swipemenu-recyclerview'
-    publishVersion = '2.0.1'
+    publishVersion = '3.0.0'
     desc = 'A swipe menu for RecyclerView'
     website = 'https://github.com/TUBB/SwipeMenuRecyclerView'
 }

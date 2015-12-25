@@ -15,6 +15,7 @@ dependencies {
     compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.0'
 }
 ```
+
 Step 1
 ------
 Use SwipeMenuLayout, we use SwipeMenuLayout ViewGroup to combine item content view and swipe menu
@@ -30,6 +31,7 @@ Use SwipeMenuLayout, we use SwipeMenuLayout ViewGroup to combine item content vi
     <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
 </com.tubb.smrv.SwipeMenuLayout>
 ```
+
 Step 2
 ------
 Just use our custom RecyclerView
@@ -51,6 +53,15 @@ Just use our custom RecyclerView
 </android.support.v4.widget.SwipeRefreshLayout>
 ```
 More details please see the demo project.
+
+Custom
+======
+You can on or off swipe feature, and set open/close Interpolator in onBindViewHolder(RecyclerView.ViewHolder vh, int position) method
+```java
+itemView.setSwipeEnable(swipeEnable);
+itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
+itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
+```
 
 Features
 ============
