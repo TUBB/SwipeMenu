@@ -44,7 +44,7 @@ import com.tubb.smrv.SwipeMenuRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SimpleRvActivity extends Activity {
+public class DifferentRvActivity extends Activity {
 
     private Context mContext;
     private List<User> users;
@@ -67,7 +67,6 @@ public class SimpleRvActivity extends Activity {
             }
         });
         mRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
-        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(3));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         // interpolator setting
         mRecyclerView.setOpenInterpolator(new BounceInterpolator());
@@ -89,8 +88,8 @@ public class SimpleRvActivity extends Activity {
 
     class AppAdapter extends RecyclerView.Adapter {
 
-        private static final int VIEW_TYPE_ENABLE = 0;
-        private static final int VIEW_TYPE_DISABLE = 1;
+        private static final int VIEW_TYPE_SIMPLE = 0;
+        private static final int VIEW_TYPE_DIFFERENT = 1;
 
         List<User> users;
 
@@ -112,80 +111,122 @@ public class SimpleRvActivity extends Activity {
         public int getItemViewType(int position) {
             User user = users.get(position);
             if(user.userId % 2 == 0){
-                return VIEW_TYPE_DISABLE;
+                return VIEW_TYPE_SIMPLE;
             }else{
-                return VIEW_TYPE_ENABLE;
+                return VIEW_TYPE_DIFFERENT;
             }
-        }
-
-        public boolean swipeEnableByViewType(int viewType) {
-            if(viewType == VIEW_TYPE_ENABLE) return true;
-            else if(viewType == VIEW_TYPE_DISABLE) return false;
-            else return true; // default
         }
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
-            return new MyViewHolder(itemView);
+            switch (viewType){
+                case VIEW_TYPE_SIMPLE:
+                    View simpleView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
+                    return new NormalViewHolder(simpleView);
+                case VIEW_TYPE_DIFFERENT:
+                    View differentView = LayoutInflater.from(mContext).inflate(R.layout.item_different, parent, false);
+                    return new DifferentViewHolder(differentView);
+            }
+
+            return null;
         }
 
         @Override
         public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
             final User user = users.get(position);
-            final MyViewHolder myViewHolder = (MyViewHolder)vh;
-            SwipeMenuLayout itemView = (SwipeMenuLayout) myViewHolder.itemView;
+            int viewType = getItemViewType(position);
+            switch (viewType){
+                case VIEW_TYPE_SIMPLE:
+                    fillSimpleView(vh, user);
+                    break;
+                case VIEW_TYPE_DIFFERENT:
+                    fillDifferentView((DifferentViewHolder) vh, user);
+                    break;
+            }
+
+        }
+
+        private void fillDifferentView(DifferentViewHolder vh, final User user) {
+            final DifferentViewHolder differentViewHolder = vh;
+            SwipeMenuLayout itemView = (SwipeMenuLayout) differentViewHolder.itemView;
+            differentViewHolder.tvName.setText(user.userName);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
                 }
             });
-            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
+            differentViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(myViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(differentViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
                 }
             });
-            myViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
+            differentViewHolder.btFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(differentViewHolder.itemView.getContext(), "Favorite", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        private void fillSimpleView(final RecyclerView.ViewHolder vh, final User user) {
+            final NormalViewHolder normalViewHolder = (NormalViewHolder)vh;
+            SwipeMenuLayout itemView = (SwipeMenuLayout) normalViewHolder.itemView;
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
+                }
+            });
+            normalViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(normalViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
+                }
+            });
+            normalViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "Open " + user.userName, Toast.LENGTH_SHORT).show();
                 }
             });
-            myViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
+            normalViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     users.remove(vh.getAdapterPosition());
                     mAdapter.notifyItemRemoved(vh.getAdapterPosition());
                 }
             });
-            myViewHolder.tvName.setText(user.userName);
-            boolean swipeEnable = swipeEnableByViewType(getItemViewType(position));
-            myViewHolder.tvSwipeEnable.setText(swipeEnable ? "swipe on" : "swipe off");
-
-            /**
-             * optional
-             */
-            itemView.setSwipeEnable(swipeEnable);
-            itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
-            itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
+            normalViewHolder.tvName.setText(user.userName);
         }
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+    public static class NormalViewHolder extends RecyclerView.ViewHolder{
         TextView tvName;
         TextView tvSwipeEnable;
         View btGood;
         View btOpen;
         View btDelete;
-        public MyViewHolder(View itemView) {
+        public NormalViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvSwipeEnable = (TextView) itemView.findViewById(R.id.tvSwipeEnable);
             btGood = itemView.findViewById(R.id.btGood);
             btOpen = itemView.findViewById(R.id.btOpen);
             btDelete = itemView.findViewById(R.id.btDelete);
+        }
+    }
+
+    public static class DifferentViewHolder extends RecyclerView.ViewHolder{
+        TextView tvName;
+        View btGood;
+        View btFavorite;
+        public DifferentViewHolder(View itemView) {
+            super(itemView);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            btGood = itemView.findViewById(R.id.btGood);
+            btFavorite = itemView.findViewById(R.id.btFavorite);
         }
     }
 

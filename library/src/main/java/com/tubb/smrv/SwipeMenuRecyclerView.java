@@ -3,10 +3,8 @@ package com.tubb.smrv;
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -29,42 +27,31 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 	private SwipeMenuLayout mTouchView;
 	private OnSwipeListener mOnSwipeListener;
 
-	private SwipeMenuCreator mMenuCreator;
-	private OnMenuItemClickListener mOnMenuItemClickListener;
 	private Interpolator mCloseInterpolator;
 	private Interpolator mOpenInterpolator;
 
-	private LinearLayoutManager mLlm;
+	private LayoutManager mLlm;
     private ViewConfiguration mViewConfiguration;
     private long startClickTime;
     private float dx;
     private float dy;
 
     public SwipeMenuRecyclerView(Context context) {
-		super(context);
-		init();
-	}
-
-	public SwipeMenuRecyclerView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		init();
+		this(context, null);
 	}
 
 	public SwipeMenuRecyclerView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		init();
+		this(context, attrs, 0);
 	}
+
+    public SwipeMenuRecyclerView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
 
 	private void init() {
 		mTouchState = TOUCH_STATE_NONE;
 		mViewConfiguration = ViewConfiguration.get(getContext());
-	}
-
-	@Override
-	public void setAdapter(RecyclerView.Adapter adapter) {
-        if (!(adapter instanceof SwipeMenuRecyclerViewAdapter))
-            throw new IllegalArgumentException("Your adapter must extends SwipeMenuRecyclerViewAdapter");
-        super.setAdapter(adapter);
 	}
 
 	public void setCloseInterpolator(Interpolator interpolator) {
@@ -93,7 +80,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         int action = ev.getAction();
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-//                Log.e("XX", "down event");
                 dx = 0.0f; // reset
                 dy = 0.0f; // reset
                 startClickTime = System.currentTimeMillis(); // reset
@@ -107,7 +93,12 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                     mTouchState = TOUCH_STATE_X;
                     mTouchView.onSwipe(ev);
                 }
-                View view = getChildAt(mTouchPosition - mLlm.findFirstVisibleItemPosition());
+                // find the touched child view
+                View view = null;
+                ViewHolder vh = findViewHolderForAdapterPosition(mTouchPosition);
+                if(vh != null){
+                    view = findViewHolderForAdapterPosition(mTouchPosition).itemView;
+                }
                 // is not touched the opened menu view, so we intercept this touch event
                 if (mTouchPosition != oldPos && mTouchView != null && mTouchView.isOpen()) {
                     mTouchView.smoothCloseMenu();
@@ -116,7 +107,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                     MotionEvent cancelEvent = MotionEvent.obtain(ev);
                     cancelEvent.setAction(MotionEvent.ACTION_CANCEL);
                     super.onTouchEvent(cancelEvent);
-//                    Log.e("XX", "intercept down event");
                     return true;
                 }
                 if (view instanceof SwipeMenuLayout) {
@@ -147,15 +137,14 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 break;
             case MotionEvent.ACTION_UP:
                 boolean isCloseOnUpEvent = false;
-//                Log.e("XX", "up evnet");
                 if (mTouchState == TOUCH_STATE_X && mTouchView.isSwipeEnable()) {
                     isCloseOnUpEvent = !mTouchView.onSwipe(ev);
+                    if (mOnSwipeListener != null) {
+                        mOnSwipeListener.onSwipeEnd(mTouchPosition);
+                    }
                     if (!mTouchView.isOpen()) {
                         mTouchPosition = -1;
                         mTouchView = null;
-                    }
-                    if (mOnSwipeListener != null) {
-                        mOnSwipeListener.onSwipeEnd(mTouchPosition);
                     }
                     ev.setAction(MotionEvent.ACTION_CANCEL);
                     super.onTouchEvent(ev);
@@ -164,7 +153,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 boolean isOutDuration = clickDuration > ViewConfiguration.getLongPressTimeout();
                 boolean isOutX = dx > mViewConfiguration.getScaledTouchSlop();
                 boolean isOutY = dy > mViewConfiguration.getScaledTouchSlop();
-//                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
                 // long pressed or scaled touch, we just intercept up touch event
                 if(isOutDuration || isOutX || isOutY){
                     return true;
@@ -176,7 +164,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                         SwipeMenuLayout smView = (SwipeMenuLayout)upView;
                         int x = (int)eX - smView.getLeft();
                         int y = (int)eY - smView.getTop();
-                        SwipeMenuView menuView = smView.getMenuView();
+                        View menuView = smView.getMenuView();
                         final float translationX = ViewCompat.getTranslationX(menuView);
                         final float translationY = ViewCompat.getTranslationY(menuView);
                         // intercept the up event when touched on the contentView of the opened SwipeMenuLayout
@@ -216,29 +204,12 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         }
 	}
 
-    public void smoothCloseMenu(int position) {
-        View view = mLlm.findViewByPosition(position);
-        if (view instanceof SwipeMenuLayout) {
-            // close the opened swipe menu
-            if (mTouchView != null && mTouchView.isOpen()) {
-                mTouchView.smoothCloseMenu();
-            }
+    public void smoothCloseMenu() {
+        // close the opened swipe menu
+        if (mTouchView != null && mTouchView.isOpen()) {
+            mTouchView.smoothCloseMenu();
         }
     }
-
-
-    public void setMenuCreator(SwipeMenuCreator menuCreator) {
-		this.mMenuCreator = menuCreator;
-	}
-
-	public SwipeMenuCreator getMenuCreator() {
-		return mMenuCreator;
-	}
-
-	public void setOnMenuItemClickListener(
-			OnMenuItemClickListener onMenuItemClickListener) {
-		this.mOnMenuItemClickListener = onMenuItemClickListener;
-	}
 
 	public void setOnSwipeListener(OnSwipeListener onSwipeListener) {
 		this.mOnSwipeListener = onSwipeListener;
@@ -248,17 +219,8 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         return mTouchView;
     }
 
-	public OnMenuItemClickListener getOnMenuItemClickListener() {
-		return mOnMenuItemClickListener;
-	}
-
-	public interface OnMenuItemClickListener {
-		boolean onMenuItemClick(int position, SwipeMenu menu, int index);
-	}
-
 	public interface OnSwipeListener {
 		void onSwipeStart(int position);
-
 		void onSwipeEnd(int position);
 	}
 
@@ -269,9 +231,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
-        if(!(layout instanceof LinearLayoutManager)){
-            throw new IllegalArgumentException("not support " + layout.getClass().getSimpleName() + " yet.");
-        }
-        mLlm = (LinearLayoutManager)layout;
+        mLlm = layout;
     }
+
 }

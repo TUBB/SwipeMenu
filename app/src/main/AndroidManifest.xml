@@ -16,11 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SimpleRvActivity" >
-        </activity>
-        <activity android:name=".DifferentMenuRvActivity" >
-        </activity>
-        <activity android:name=".GridLayoutManagerRvActivity"/>
+        <activity android:name=".SimpleRvActivity"/>
+        <activity android:name=".DifferentRvActivity"/>
+        <activity android:name=".GridRvActivity"/>
+        <activity android:name=".StaggeredGridRvActivity"/>
     </application>
-
 </manifest>

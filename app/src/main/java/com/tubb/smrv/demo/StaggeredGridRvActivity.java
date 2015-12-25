@@ -26,15 +26,17 @@ package com.tubb.smrv.demo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +45,9 @@ import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class SimpleRvActivity extends Activity {
+public class StaggeredGridRvActivity extends Activity {
 
     private Context mContext;
     private List<User> users;
@@ -67,8 +70,8 @@ public class SimpleRvActivity extends Activity {
             }
         });
         mRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
-        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(3));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new StaggeredSpaceItemDecoration(15, 0, 15, 45));
         // interpolator setting
         mRecyclerView.setOpenInterpolator(new BounceInterpolator());
         mRecyclerView.setCloseInterpolator(new BounceInterpolator());
@@ -78,10 +81,21 @@ public class SimpleRvActivity extends Activity {
 
     private List<User> getUsers() {
         List<User> userList = new ArrayList<>();
+        Random random = new Random();
         for (int i=0; i<100; i++){
             User user = new User();
             user.userId = i+1000;
             user.userName = "Pobi "+(i+1);
+            int num = random.nextInt(4);
+            if(num == 0){
+                user.photoRes = R.drawable.one;
+            }else if(num == 1){
+                user.photoRes = R.drawable.two;
+            }else if(num == 2){
+                user.photoRes = R.drawable.three;
+            }else if(num == 3){
+                user.photoRes = R.drawable.four;
+            }
             userList.add(user);
         }
         return userList;
@@ -126,7 +140,7 @@ public class SimpleRvActivity extends Activity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_staggered, parent, false);
             return new MyViewHolder(itemView);
         }
 
@@ -139,12 +153,6 @@ public class SimpleRvActivity extends Activity {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
-                }
-            });
-            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(myViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
@@ -161,13 +169,10 @@ public class SimpleRvActivity extends Activity {
                 }
             });
             myViewHolder.tvName.setText(user.userName);
-            boolean swipeEnable = swipeEnableByViewType(getItemViewType(position));
-            myViewHolder.tvSwipeEnable.setText(swipeEnable ? "swipe on" : "swipe off");
-
+            myViewHolder.ivPhoto.setImageResource(user.photoRes);
             /**
              * optional
              */
-            itemView.setSwipeEnable(swipeEnable);
             itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
             itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
         }
@@ -175,15 +180,13 @@ public class SimpleRvActivity extends Activity {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
         TextView tvName;
-        TextView tvSwipeEnable;
-        View btGood;
+        ImageView ivPhoto;
         View btOpen;
         View btDelete;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
-            tvSwipeEnable = (TextView) itemView.findViewById(R.id.tvSwipeEnable);
-            btGood = itemView.findViewById(R.id.btGood);
+            ivPhoto = (ImageView) itemView.findViewById(R.id.ivPhoto);
             btOpen = itemView.findViewById(R.id.btOpen);
             btDelete = itemView.findViewById(R.id.btDelete);
         }
@@ -214,5 +217,7 @@ public class SimpleRvActivity extends Activity {
     class User{
         public int userId;
         public String userName;
+        @DrawableRes
+        public int photoRes;
     }
 }

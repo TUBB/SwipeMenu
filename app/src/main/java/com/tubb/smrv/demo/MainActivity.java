@@ -38,7 +38,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
     }
 
     public void onClick(View v){
@@ -47,10 +46,13 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, SimpleRvActivity.class));
                 break;
             case R.id.button2:
-                startActivity(new Intent(this, DifferentMenuRvActivity.class));
+                startActivity(new Intent(this, DifferentRvActivity.class));
                 break;
             case R.id.button3:
-                startActivity(new Intent(this, GridLayoutManagerRvActivity.class));
+                startActivity(new Intent(this, GridRvActivity.class));
+                break;
+            case R.id.button4:
+                startActivity(new Intent(this, StaggeredGridRvActivity.class));
                 break;
         }
     }

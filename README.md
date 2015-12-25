@@ -1,6 +1,6 @@
 SwipeMenuRecyclerView
 =================
-A swipe menu for RecyclerView,extend from [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView).
+A swipe menu for RecyclerView, low coupling, can fast rapid integration into your project
 
 DEMO
 ====
@@ -9,17 +9,52 @@ DEMO
 Usage
 ======
 Add to dependencies
+-------------------
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:2.0.1'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.0'
 }
 ```
-Similar to [SwipeMenuListView](https://github.com/baoyongzhang/SwipeMenuListView).
+Step 1
+------
+Use SwipeMenuLayout, we use SwipeMenuLayout ViewGroup to combine item content view and swipe menu
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<com.tubb.smrv.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <!-- item content view -->
+    <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
+    <!-- item swipe menu -->
+    <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
+</com.tubb.smrv.SwipeMenuLayout>
+```
+Step 2
+------
+Just use our custom RecyclerView
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}"
+    android:id="@+id/swipeRefreshLayout">
+
+    <com.tubb.smrv.SwipeMenuRecyclerView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.v4.widget.SwipeRefreshLayout>
+```
 More details please see the demo project.
 
-New features
+Features
 ============
-    support LinearLayoutManager and GridLayoutManager for RecyclerView
-    on-off swipe ability
-    not intercept item touch event
-    good expansibility, your can extend SwipeMenuRecyclerView for custom logic
+    Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView
+    On-off swipe ability
+    Not intercept item touch event
+    Good expansibility, we only override onInterceptTouchEvent(MotionEvent ev) method of RecyclerView
