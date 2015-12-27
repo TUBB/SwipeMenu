@@ -19,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 6
+        versionName "2.0.1"
     }
     buildTypes {
         release {
@@ -34,14 +34,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:recyclerview-v7:22.2.0'
-    compile 'com.tubb.picker.library:picker:3.0'
 }
 
 publish {
     userOrg = 'tubb'
     groupId = 'com.tubb.smrv'
     artifactId = 'swipemenu-recyclerview'
-    publishVersion = '1.0.3'
+    publishVersion = '2.0.1'
     desc = 'A swipe menu for RecyclerView'
     website = 'https://github.com/TUBB/SwipeMenuRecyclerView'
 }

@@ -1,14 +1,14 @@
 package com.tubb.smrv;
 
 import android.content.Context;
+
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -22,7 +22,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 
 	public static final int DIRECTION_LEFT = 1;
 	public static final int DIRECTION_RIGHT = -1;
-	private int mDirection = 1;//swipe from right to left by default
+	private int mDirection = DIRECTION_LEFT;//swipe from right to left by default
 
 	private float mDownX;
 	private float mDownY;
@@ -93,8 +93,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         }
 
         int action = ev.getAction();
-        switch (action) {
+
+        switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
+//                Log.e("XX", "down event");
                 dx = 0.0f; // reset
                 dy = 0.0f; // reset
                 startClickTime = System.currentTimeMillis(); // reset
@@ -147,7 +149,8 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 break;
             case MotionEvent.ACTION_UP:
                 boolean isCloseOnUpEvent = false;
-                if (mTouchState == TOUCH_STATE_X) {
+//                Log.e("XX", "up evnet");
+                if (mTouchState == TOUCH_STATE_X && mTouchView.isSwipeEnable()) {
                     isCloseOnUpEvent = !mTouchView.onSwipe(ev);
                     if (!mTouchView.isOpen()) {
                         mTouchPosition = -1;
@@ -163,7 +166,8 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 boolean isOutDuration = clickDuration > ViewConfiguration.getLongPressTimeout();
                 boolean isOutX = dx > mViewConfiguration.getScaledTouchSlop();
                 boolean isOutY = dy > mViewConfiguration.getScaledTouchSlop();
-                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
+
+//                Log.e("XX", "isOutDuration:"+isOutDuration+" isOutX:"+isOutX+" isOutY:"+isOutY);
                 // long pressed or scaled touch, we just intercept up touch event
                 if(isOutDuration || isOutX || isOutY){
                     return true;
@@ -182,10 +186,18 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                         if (!(x >= menuView.getLeft() + translationX &&
                                 x <= menuView.getRight() + translationX &&
                                 y >= menuView.getTop() + translationY &&
-                                y <= menuView.getBottom() + translationY) && isCloseOnUpEvent) {
+                                y <= menuView.getBottom() + translationY) &&
+                                isCloseOnUpEvent) {
                             return true;
                         }
                     }
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                if(mTouchView != null && mTouchView.isSwipeEnable()){
+                    // when event has canceled, we just consider as up event
+                    ev.setAction(MotionEvent.ACTION_UP);
+                    mTouchView.onSwipe(ev);
                 }
                 break;
         }

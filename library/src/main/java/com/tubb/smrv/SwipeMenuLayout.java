@@ -47,6 +47,7 @@ public class SwipeMenuLayout extends FrameLayout {
     private OnClickListener onClickListener;
     private ViewConfiguration mViewConfiguration;
 	private boolean swipeEnable = true;
+    private int mMinFlingDistance = 3; // dip
 
 	public SwipeMenuLayout(View contentView, SwipeMenuView menuView) {
 		this(contentView, menuView, null, null);
@@ -99,13 +100,11 @@ public class SwipeMenuLayout extends FrameLayout {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2,
                                    float velocityX, float velocityY) {
-                // TODO
-                if (Math.abs(e1.getX() - e2.getX()) > mViewConfiguration.getScaledMinimumFlingVelocity()
-                        && velocityX < mViewConfiguration.getScaledMaximumFlingVelocity()) {
+
+                if(velocityX > mViewConfiguration.getScaledMinimumFlingVelocity() || velocityY > mViewConfiguration.getScaledMinimumFlingVelocity())
                     isFling = true;
-                }
-                // Log.i("byz", MAX_VELOCITYX + ", velocityX = " + velocityX);
-                return super.onFling(e1, e2, velocityX, velocityY);
+//                Log.e("XX", "isFling:"+isFling);
+                return isFling;
             }
         };
         mGestureDetector = new GestureDetectorCompat(getContext(),
@@ -135,24 +134,26 @@ public class SwipeMenuLayout extends FrameLayout {
 
         mMenuView.setId(R.id.sm_menu_view_id);
         mMenuView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.MATCH_PARENT));
+				LayoutParams.MATCH_PARENT));
 
         addView(mContentView);
         addView(mMenuView);
 
 		// in android 2.x, MenuView height is MATCH_PARENT is not work.
-//		 getViewTreeObserver().addOnGlobalLayoutListener(
-//		 new ViewTreeObserver.OnGlobalLayoutListener() {
-//         @Override
-//		 public void onGlobalLayout() {
-//		     setMenuHeight(mContentView.getHeight());
-//             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-//                getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//             else
-//                 getViewTreeObserver().removeGlobalOnLayoutListener(this);
-//		 }
-//		 });
 
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			getViewTreeObserver().addOnGlobalLayoutListener(
+				new ViewTreeObserver.OnGlobalLayoutListener() {
+					@Override
+					public void onGlobalLayout() {
+						setMenuHeight(mContentView.getHeight());
+						if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
+							getViewTreeObserver().removeOnGlobalLayoutListener(this);
+						else
+							getViewTreeObserver().removeGlobalOnLayoutListener(this);
+					}
+				});
+		}
 	}
 
 	@Override
@@ -181,12 +182,14 @@ public class SwipeMenuLayout extends FrameLayout {
 			swipe(dis);
 			break;
 		case MotionEvent.ACTION_UP:
-			if ((isFling || Math.abs(mDownX - event.getX()) > (mMenuView.getWidth() / 2)) &&
+			if ((isFling || Math.abs(mDownX - event.getX()) > (mMenuView.getWidth() / 3)) &&
 					Math.signum(mDownX - event.getX()) == mSwipeDirection) {
 				// open
+//                Log.e("XX", "open");
 				smoothOpenMenu();
 			} else {
 				// close
+//                Log.e("XX", "close");
 				smoothCloseMenu();
 				return false;
 			}
@@ -240,10 +243,11 @@ public class SwipeMenuLayout extends FrameLayout {
 		state = STATE_CLOSE;
 		if (mSwipeDirection == SwipeMenuRecyclerView.DIRECTION_LEFT) {
 			mBaseX = -mContentView.getLeft();
-			mCloseScroller.startScroll(0, 0, mMenuView.getWidth(), 0, 300);
+
+			mCloseScroller.startScroll(0, 0, mMenuView.getWidth(), 0, 500);
 		} else {
 			mBaseX = mMenuView.getRight();
-			mCloseScroller.startScroll(0, 0, mMenuView.getWidth(), 0, 300);
+			mCloseScroller.startScroll(0, 0, mMenuView.getWidth(), 0, 500);
 		}
 		postInvalidate();
 	}
@@ -251,9 +255,9 @@ public class SwipeMenuLayout extends FrameLayout {
 	public void smoothOpenMenu() {
 		state = STATE_OPEN;
 		if (mSwipeDirection == SwipeMenuRecyclerView.DIRECTION_LEFT) {
-			mOpenScroller.startScroll(-mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 300);
+			mOpenScroller.startScroll(-mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 500);
 		} else {
-			mOpenScroller.startScroll(mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 300);
+			mOpenScroller.startScroll(mContentView.getLeft(), 0, mMenuView.getWidth(), 0, 500);
 		}
 		postInvalidate();
 	}

@@ -29,7 +29,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -41,7 +41,6 @@ import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
 import com.tubb.smrv.SwipeMenu;
 import com.tubb.smrv.SwipeMenuCreator;
 import com.tubb.smrv.SwipeMenuItem;
@@ -55,10 +54,9 @@ import java.util.List;
  * SwipeMenuListView
  * Created by baoyz on 15/6/29.
  */
-public class SimpleRvActivity extends Activity {
+public class GridLayoutManagerRvActivity extends Activity {
 
     private Context mContext;
-
     private List<User> users;
     private AppAdapter mAdapter;
     private SwipeMenuRecyclerView mRecyclerView;
@@ -72,19 +70,17 @@ public class SimpleRvActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         mContext = this;
-
         users = getUsers();
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 Toast.makeText(mContext, "Refresh success", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
         mRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new AppAdapter(this, mRecyclerView, users);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -135,7 +131,6 @@ public class SimpleRvActivity extends Activity {
         mRecyclerView.setOnMenuItemClickListener(new SwipeMenuRecyclerView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-
                 SwipeMenuItem swipeMenuItem = menu.getMenuItem(index);
                 switch (swipeMenuItem.getType()) {
                     case MENU_OPEN_TYPE:
@@ -222,7 +217,7 @@ public class SimpleRvActivity extends Activity {
 
         @Override
         public View onCreateItemView(ViewGroup viewGroup, int viewType) {
-            return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_app, viewGroup, false);
+            return LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_grid_list, viewGroup, false);
         }
 
         @Override
@@ -232,39 +227,28 @@ public class SimpleRvActivity extends Activity {
 
         @Override
         public void onBindWrapViewHolder(RecyclerView.ViewHolder vh, final int position) {
-
             final User user = users.get(position);
             final MyViewHolder myViewHolder = (MyViewHolder)vh;
             myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     Toast.makeText(mContext, "Hi", Toast.LENGTH_LONG).show();
-                }
-            });
-            myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Toast.makeText(myViewHolder.itemView.getContext(), "Good", Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.tvName.setText(user.userName);
             boolean swipeEnable = swipeEnableByViewType(getItemViewType(position));
             myViewHolder.tvSwipeEnable.setText(swipeEnable?"swipe on":"swipe off");
+
         }
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-
         TextView tvName;
         TextView tvSwipeEnable;
-        View btGood;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
             tvSwipeEnable = (TextView) itemView.findViewById(R.id.tvSwipeEnable);
-            btGood = itemView.findViewById(R.id.btGood);
         }
     }
 

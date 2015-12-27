@@ -1,5 +1,7 @@
 package com.tubb.smrv;
 
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,7 +64,6 @@ public class SwipeMenuView extends LinearLayout implements OnClickListener {
 		if (!TextUtils.isEmpty(item.getTitle())) {
 			parent.addView(createTitle(item));
 		}
-
 	}
 
 	private ImageView createIcon(SwipeMenuItem item) {
@@ -78,6 +79,10 @@ public class SwipeMenuView extends LinearLayout implements OnClickListener {
 		tv.setTextSize(item.getTitleSize());
 		tv.setTextColor(item.getTitleColor());
 		return tv;
+	}
+
+	public SwipeMenu getMenu() {
+		return mMenu;
 	}
 
 	@Override
