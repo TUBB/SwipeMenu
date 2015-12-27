@@ -24,9 +24,9 @@ Use SwipeMenuLayout, we use SwipeMenuLayout ViewGroup to combine item content vi
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <!-- item content view -->
+    <!-- item content view, the id must be (smContentView) -->
     <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
-    <!-- item swipe menu -->
+    <!-- item swipe menu, the id must be (smMenuView) -->
     <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
 </com.tubb.smrv.SwipeMenuLayout>
 ```
