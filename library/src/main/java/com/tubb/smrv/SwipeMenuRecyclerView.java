@@ -97,7 +97,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 View view = null;
                 ViewHolder vh = findViewHolderForAdapterPosition(mTouchPosition);
                 if(vh != null){
-                    view = findViewHolderForAdapterPosition(mTouchPosition).itemView;
+                    view = vh.itemView;
                 }
                 // is not touched the opened menu view, so we intercept this touch event
                 if (mTouchPosition != oldPos && mTouchView != null && mTouchView.isOpen()) {
