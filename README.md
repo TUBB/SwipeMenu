@@ -12,7 +12,7 @@ Add to dependencies
 -------------------
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.0'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.2'
 }
 ```
 
@@ -61,6 +61,17 @@ You can on or off swipe feature, and set open/close Interpolator in onBindViewHo
 itemView.setSwipeEnable(swipeEnable);
 itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
 itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
+```
+We add anim_duration attr to custom swipe animation duration, default is 500ms
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<com.tubb.smrv.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipemenu="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    swipemenu:anim_duration="300">
+
+</com.tubb.smrv.SwipeMenuLayout>
 ```
 
 Features

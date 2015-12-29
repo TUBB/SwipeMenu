@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <item name="sm_content_view_id" type="id" tools:ignore="ResourceName" />
-    <item name="sm_menu_view_id" type="id" tools:ignore="ResourceName" />
     <item name="smContentView" type="id"/>
     <item name="smMenuView" type="id"/>
 </resources>

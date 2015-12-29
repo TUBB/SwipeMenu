@@ -12,29 +12,29 @@ import android.view.animation.Interpolator;
 
 public class SwipeMenuRecyclerView extends RecyclerView {
 
-	private static final int TOUCH_STATE_NONE = 0;
-	private static final int TOUCH_STATE_X = 1;
-	private static final int TOUCH_STATE_Y = 2;
+	public static final int TOUCH_STATE_NONE = 0;
+    public static final int TOUCH_STATE_X = 1;
+    public static final int TOUCH_STATE_Y = 2;
 
-	public static final int DIRECTION_LEFT = 1;
-	public static final int DIRECTION_RIGHT = -1;
-	private int mDirection = DIRECTION_LEFT;//swipe from right to left by default
+    public static final int DIRECTION_LEFT = 1;
+    public static final int DIRECTION_RIGHT = -1;
+    protected int mDirection = DIRECTION_LEFT; // swipe from right to left by default
 
-	private float mDownX;
-	private float mDownY;
-	private int mTouchState;
-	private int mTouchPosition;
-	private SwipeMenuLayout mTouchView;
-	private OnSwipeListener mOnSwipeListener;
+    protected float mDownX;
+    protected float mDownY;
+    protected int mTouchState;
+    protected int mTouchPosition;
+    protected SwipeMenuLayout mTouchView;
+    protected OnSwipeListener mOnSwipeListener;
 
-	private Interpolator mCloseInterpolator;
-	private Interpolator mOpenInterpolator;
+    protected Interpolator mCloseInterpolator;
+    protected Interpolator mOpenInterpolator;
 
-	private LayoutManager mLlm;
-    private ViewConfiguration mViewConfiguration;
-    private long startClickTime;
-    private float dx;
-    private float dy;
+    protected LayoutManager mLlm;
+    protected ViewConfiguration mViewConfiguration;
+    protected long startClickTime;
+    protected float dx;
+    protected float dy;
 
     public SwipeMenuRecyclerView(Context context) {
 		this(context, null);
@@ -49,7 +49,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         init();
     }
 
-	private void init() {
+    protected void init() {
 		mTouchState = TOUCH_STATE_NONE;
 		mViewConfiguration = ViewConfiguration.get(getContext());
 	}
@@ -190,6 +190,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         return super.onInterceptTouchEvent(ev);
     }
 
+    /**
+     * open menu manually
+     * @param position the adapter position
+     */
 	public void smoothOpenMenu(int position) {
         View view = mLlm.findViewByPosition(position);
         if (view instanceof SwipeMenuLayout) {
@@ -204,6 +208,9 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         }
 	}
 
+    /**
+     * close the opened menu manually
+     */
     public void smoothCloseMenu() {
         // close the opened swipe menu
         if (mTouchView != null && mTouchView.isOpen()) {
@@ -215,6 +222,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 		this.mOnSwipeListener = onSwipeListener;
 	}
 
+    /**
+     * get current touched view
+     * @return touched view, maybe null
+     */
     public SwipeMenuLayout getTouchView() {
         return mTouchView;
     }
@@ -224,6 +235,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
 		void onSwipeEnd(int position);
 	}
 
+    /**
+     * set the swipe direction
+     * @param direction swipe direction (left or right)
+     */
 	public void setSwipeDirection(int direction) {
 		mDirection = direction;
 	}
