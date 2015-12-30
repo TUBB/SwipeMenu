@@ -58,6 +58,7 @@ public class SwipeMenuLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        setClickable(true);
         mContentView = findViewById(R.id.smContentView);
         if(mContentView == null){
             throw new IllegalArgumentException("not find contentView by id smContentView");
@@ -229,7 +230,11 @@ public class SwipeMenuLayout extends FrameLayout {
 		return mMenuView;
 	}
 
-	@Override
+    public View getContentView() {
+        return mContentView;
+    }
+
+    @Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		mContentView.layout(0, 0, getMeasuredWidth(),
                 mContentView.getMeasuredHeight());
