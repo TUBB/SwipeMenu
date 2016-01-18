@@ -12,7 +12,7 @@ Add to dependencies
 -------------------
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.4'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.5'
 }
 ```
 
@@ -75,7 +75,7 @@ We add anim_duration attr to custom swipe animation duration, default is 500ms
 ```
 
 Features
-============
+=======
     Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView
     On-off swipe ability
     Not intercept item touch event

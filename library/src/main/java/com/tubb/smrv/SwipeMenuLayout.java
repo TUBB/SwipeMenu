@@ -1,6 +1,5 @@
 package com.tubb.smrv;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
@@ -15,10 +14,6 @@ import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 
-/**
- * @author baoyz
- * @date 2014-8-23
- */
 public class SwipeMenuLayout extends FrameLayout {
 
 	private static final int STATE_CLOSE = 0;
@@ -51,9 +46,11 @@ public class SwipeMenuLayout extends FrameLayout {
 
 	public SwipeMenuLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
-		animDuration = a.getInteger(R.styleable.SwipeMenu_anim_duration, 500);
-		a.recycle();
+		if(!isInEditMode()){
+			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
+			animDuration = a.getInteger(R.styleable.SwipeMenu_anim_duration, 500);
+			a.recycle();
+		}
 	}
 
 	@Override
@@ -147,7 +144,6 @@ public class SwipeMenuLayout extends FrameLayout {
 		return state == STATE_OPEN;
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private void swipe(int dis) {
 		if (Math.signum(dis) != mSwipeDirection) {
 			dis = 0;
@@ -239,7 +235,6 @@ public class SwipeMenuLayout extends FrameLayout {
 		return mContentView;
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		FrameLayout.LayoutParams lp = (LayoutParams) mContentView.getLayoutParams();
