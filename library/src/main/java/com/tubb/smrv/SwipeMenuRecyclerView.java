@@ -8,7 +8,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SwipeMenuRecyclerView extends RecyclerView {
 
@@ -94,10 +98,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                     mTouchView.onSwipe(ev);
                 }
                 // find the touched child view
-                View view = null;
+                ViewGroup itemView = null;
                 ViewHolder vh = findViewHolderForAdapterPosition(mTouchPosition);
                 if(vh != null){
-                    view = vh.itemView;
+                    itemView = (ViewGroup) vh.itemView;
                 }
                 // is not touched the opened menu view, so we intercept this touch event
                 if (mTouchPosition != oldPos && mTouchView != null && mTouchView.isOpen()) {
@@ -109,6 +113,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                     super.onTouchEvent(cancelEvent);
                     return true;
                 }
+                View view = getSwipeMenuView(itemView);
                 if (view instanceof SwipeMenuLayout) {
                     mTouchView = (SwipeMenuLayout) view;
                     mTouchView.setSwipeDirection(mDirection);
@@ -188,6 +193,23 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         }
 
         return super.onInterceptTouchEvent(ev);
+    }
+
+    private View getSwipeMenuView(ViewGroup itemView) {
+        if(itemView instanceof SwipeMenuLayout) return itemView;
+        List<View> unvisited = new ArrayList<>();
+        unvisited.add(itemView);
+        while (!unvisited.isEmpty()) {
+            View child = unvisited.remove(0);
+            if (!(child instanceof ViewGroup)) { // view
+                continue;
+            }
+            if(child instanceof SwipeMenuLayout) return child;
+            ViewGroup group = (ViewGroup) child;
+            final int childCount = group.getChildCount();
+            for (int i=0; i<childCount; i++) unvisited.add(group.getChildAt(i));
+        }
+        return itemView;
     }
 
     /**

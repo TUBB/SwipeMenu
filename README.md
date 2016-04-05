@@ -12,7 +12,7 @@ Add to dependencies
 -------------------
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.6'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.7'
 }
 ```
 

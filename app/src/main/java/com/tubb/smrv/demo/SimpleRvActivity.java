@@ -103,7 +103,7 @@ public class SimpleRvActivity extends Activity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.item_simple_nest, parent, false);
             return new MyViewHolder(itemView);
         }
 
@@ -111,7 +111,7 @@ public class SimpleRvActivity extends Activity {
         public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
             final User user = users.get(position);
             final MyViewHolder myViewHolder = (MyViewHolder)vh;
-            SwipeMenuLayout itemView = (SwipeMenuLayout) myViewHolder.itemView;
+            View itemView = myViewHolder.itemView;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -144,9 +144,10 @@ public class SimpleRvActivity extends Activity {
             /**
              * optional
              */
-            itemView.setSwipeEnable(swipeEnable);
-            itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
-            itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
+
+            myViewHolder.swipeMenuLayout.setSwipeEnable(swipeEnable);
+            myViewHolder.swipeMenuLayout.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
+            myViewHolder.swipeMenuLayout.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
         }
     }
 
@@ -156,6 +157,7 @@ public class SimpleRvActivity extends Activity {
         View btGood;
         View btOpen;
         View btDelete;
+        SwipeMenuLayout swipeMenuLayout;
         public MyViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
@@ -163,6 +165,7 @@ public class SimpleRvActivity extends Activity {
             btGood = itemView.findViewById(R.id.btGood);
             btOpen = itemView.findViewById(R.id.btOpen);
             btDelete = itemView.findViewById(R.id.btDelete);
+            swipeMenuLayout = (SwipeMenuLayout) itemView.findViewById(R.id.sml);
         }
     }
 
