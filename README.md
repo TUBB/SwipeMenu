@@ -24,7 +24,7 @@ Just use `SwipeMenuLayout`, we use `SwipeMenuLayout` ViewGroup to combine item c
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"
-    sml:sml_auto_open_percent="0.2"
+    sml:sml_auto_open_percent="0.5"
     sml:sml_scroller_duration="250">
 
     <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
@@ -59,8 +59,8 @@ Custom
 
 Supported custom attrs:
 
- * `sml_scroller_duration` Scroller duration(ms), `sml:sml_scroller_duration="300"`
- * `sml_auto_open_percent` Swipe menu auto open percent(relative to menu's width), `sml:sml_auto_open_percent="0.4"`
+ * `sml_scroller_duration` Scroller duration(ms), `sml:sml_scroller_duration="250"`
+ * `sml_auto_open_percent` Swipe menu auto open percent(relative to menu's width), `sml:sml_auto_open_percent="0.5"`
  * `sml_scroller_interpolator` Scroller open/close interpolation, `sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"`
 
 ```xml
