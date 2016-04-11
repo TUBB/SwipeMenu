@@ -60,7 +60,6 @@ public class SwipeMenuLayout extends FrameLayout {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         boolean d = super.dispatchTouchEvent(ev);
-        Log.e(TAG, "dispatchTouchEvent:"+d);
         return d;
     }
 
@@ -74,10 +73,8 @@ public class SwipeMenuLayout extends FrameLayout {
                 mDownX = mLastX = (int) ev.getX();
                 mDownY = (int) ev.getY();
                 isIntercepted = false;
-                Log.e(TAG, "SML down...");
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.e(TAG, "SML move...");
                 int disX = (int) (ev.getX() - mDownX);
                 if(Math.abs(disX) > mScaledTouchSlop)
                     isIntercepted = true;
@@ -85,7 +82,6 @@ public class SwipeMenuLayout extends FrameLayout {
                     isIntercepted = false;
                 break;
             case MotionEvent.ACTION_UP:
-                Log.e(TAG, "SML up...");
                 isIntercepted = false;
                 // menu view opened and click on content view,
                 // we just close the menu view and intercept the up event
@@ -101,7 +97,6 @@ public class SwipeMenuLayout extends FrameLayout {
                     mScroller.abortAnimation();
                 break;
         }
-        Log.e(TAG, "SML intercept:"+isIntercepted);
         return isIntercepted;
     }
 
