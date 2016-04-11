@@ -1,6 +1,6 @@
 SwipeMenuRecyclerView
 =================
-A swipe menu for cross slip, support left and right menu, low coupling, can fast rapid integration into your project
+A swipe menu for cross slip, support left and right direction, low coupling, can fast rapid integration into your project
 
 Preview
 =======
