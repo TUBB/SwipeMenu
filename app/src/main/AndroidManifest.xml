@@ -16,9 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SimpleRvActivity"/>
-        <activity android:name=".DifferentRvActivity"/>
-        <activity android:name=".GridRvActivity"/>
-        <activity android:name=".StaggeredGridRvActivity"/>
+        <activity android:name=".normal.NormalMainActivity"/>
+        <activity android:name=".normal.SimpleActivity"/>
+        <activity android:name=".rv.RvMainActivity"/>
+        <activity android:name=".rv.SimpleRvActivity"/>
+        <activity android:name=".rv.DifferentRvActivity"/>
+        <activity android:name=".rv.GridRvActivity"/>
+        <activity android:name=".rv.StaggeredGridRvActivity"/>
     </application>
 </manifest>

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tubb.smrv.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swipemenu="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    swipemenu:anim_duration="300">
+    >
 
     <include android:id="@id/smContentView" layout="@layout/item_different_content"/>
-    <include android:id="@id/smMenuView" layout="@layout/item_different_menu"/>
+    <include android:id="@id/smMenuViewRight" layout="@layout/item_different_menu"/>
 
 </com.tubb.smrv.SwipeMenuLayout>

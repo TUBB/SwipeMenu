@@ -23,25 +23,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/button1"
         android:onClick="onClick"
-        android:text="different menu demo" />
+        android:text="RecyclerView demo" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/button2"
-        android:onClick="onClick"
-        android:text="grid recyclerview menu demo" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/button3"
-        android:onClick="onClick"
-        android:text="staggered grid recyclerview menu demo" />
 </RelativeLayout>

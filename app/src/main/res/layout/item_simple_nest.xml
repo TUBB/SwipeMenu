@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TopView"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:background="@android:color/holo_blue_light"
-        android:visibility="gone"
-        />
+        android:text="Top View"
+        android:padding="15dp"
+        android:gravity="center"/>
+<com.tubb.smrv.SwipeMenuLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sml"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
 
-    <com.tubb.smrv.SwipeMenuLayout
-        android:id="@+id/sml"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
+    <include android:id="@id/smMenuViewLeft" layout="@layout/item_simple_left_menu"/>
+    <include android:id="@id/smMenuViewRight" layout="@layout/item_simple_right_menu"/>
 
-        <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
-        <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
-
-    </com.tubb.smrv.SwipeMenuLayout>
+</com.tubb.smrv.SwipeMenuLayout>
 </LinearLayout>

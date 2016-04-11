@@ -6,6 +6,7 @@
     >
 
     <include android:id="@id/smContentView" layout="@layout/item_staggered_content"/>
-    <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
+    <include android:id="@id/smMenuViewLeft" layout="@layout/item_simple_left_menu"/>
+    <include android:id="@id/smMenuViewRight" layout="@layout/item_simple_menu"/>
 
 </com.tubb.smrv.SwipeMenuLayout>

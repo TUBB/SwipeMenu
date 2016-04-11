@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.tubb.smrv.demo.normal.SimpleActivity;
+import com.tubb.smrv.demo.rv.RvMainActivity;
+
 public class MainActivity extends Activity {
 
     @Override
@@ -16,16 +19,10 @@ public class MainActivity extends Activity {
     public void onClick(View v){
         switch (v.getId()) {
             case R.id.button1:
-                startActivity(new Intent(this, SimpleRvActivity.class));
+                startActivity(new Intent(this, SimpleActivity.class));
                 break;
             case R.id.button2:
-                startActivity(new Intent(this, DifferentRvActivity.class));
-                break;
-            case R.id.button3:
-                startActivity(new Intent(this, GridRvActivity.class));
-                break;
-            case R.id.button4:
-                startActivity(new Intent(this, StaggeredGridRvActivity.class));
+                startActivity(new Intent(this, RvMainActivity.class));
                 break;
         }
     }

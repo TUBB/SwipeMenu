@@ -1,40 +1,40 @@
 SwipeMenuRecyclerView
 =================
-A swipe menu for RecyclerView, low coupling, can fast rapid integration into your project
+A swipe menu for cross slip, support left and right menu, low coupling, can fast rapid integration into your project
 
-DEMO
-====
+Preview
+=======
 ![DEMO](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/art/demo.gif)
 
 Usage
-======
+=====
+
 Add to dependencies
--------------------
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:3.0.7'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.1'
 }
 ```
 
-Step 1
-------
-Use SwipeMenuLayout, we use SwipeMenuLayout ViewGroup to combine item content view and swipe menu
+Just use `SwipeMenuLayout`, we use `SwipeMenuLayout` ViewGroup to combine item content view and `left/right(at least one)` swipe menu
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<com.tubb.smrv.SwipeMenuLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.tubb.smrv.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sml="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sml"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <!-- item content view, the id must be (smContentView) -->
+    android:layout_height="wrap_content"
+    sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"
+    sml:sml_auto_open_percent="0.2"
+    sml:sml_scroller_duration="250">
+
     <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
-    <!-- item swipe menu, the id must be (smMenuView) -->
-    <include android:id="@id/smMenuView" layout="@layout/item_simple_menu"/>
+    <include android:id="@id/smMenuViewLeft" layout="@layout/item_simple_left_menu"/>
+    <include android:id="@id/smMenuViewRight" layout="@layout/item_simple_right_menu"/>
+
 </com.tubb.smrv.SwipeMenuLayout>
 ```
 
-Step 2
-------
-Just use our custom RecyclerView
+If you have so many items, you may be want to use our custom RecyclerView
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout
@@ -56,30 +56,31 @@ More details please see the demo project.
 
 Custom
 ======
-You can on or off swipe feature, and set open/close Interpolator in onBindViewHolder(RecyclerView.ViewHolder vh, int position) method
-```java
-itemView.setSwipeEnable(swipeEnable);
-itemView.setOpenInterpolator(mRecyclerView.getOpenInterpolator());
-itemView.setCloseInterpolator(mRecyclerView.getCloseInterpolator());
-```
-We add anim_duration attr to custom swipe animation duration, default is 500ms
+
+Supported custom attrs:
+
+ * `sml_scroller_duration` Scroller duration(ms), `sml:sml_scroller_duration="300"`
+ * `sml_auto_open_percent` Swipe menu auto open percent(relative to menu's width), `sml:sml_auto_open_percent="0.4"`
+ * `sml_scroller_interpolator` Scroller open/close interpolation, `sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"`
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<com.tubb.smrv.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:swipemenu="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    swipemenu:anim_duration="300">
-
-</com.tubb.smrv.SwipeMenuLayout>
+<resources>
+    <declare-styleable name="SwipeMenu">
+        <attr name="sml_scroller_duration" format="integer" />
+        <attr name="sml_auto_open_percent" format="float"/>
+        <attr name="sml_scroller_interpolator" format="reference"/>
+    </declare-styleable>
+</resources>
 ```
 
 Features
-=======
-    Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView
-    On-off swipe ability
-    Not intercept item touch event
-    Good expansibility, we only override onInterceptTouchEvent(MotionEvent ev) method of RecyclerView
+======== 
+ 
+ * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView
+ * On-off swipe ability
+ * Not intercept item touch event
+ * Left/Right menu support, free switch
 
 License
 -------
