@@ -12,7 +12,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.2'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.3'
 }
 ```
 

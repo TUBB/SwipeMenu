@@ -35,6 +35,10 @@ public abstract class HorizontalSwiper {
         return menuView;
     }
 
+    public int getMenuWidth(){
+        return getMenuView().getWidth();
+    }
+
     public static final class Checker{
         public int x;
         public int y;

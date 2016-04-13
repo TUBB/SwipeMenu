@@ -57,9 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"
-        sml:sml_auto_open_percent="0.4"
-        sml:sml_scroller_duration="500"
         >
 
         <RelativeLayout

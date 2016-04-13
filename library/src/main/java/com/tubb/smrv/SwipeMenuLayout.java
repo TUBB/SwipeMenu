@@ -6,6 +6,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -18,7 +19,7 @@ public class SwipeMenuLayout extends FrameLayout {
 
     private static final String TAG = "sml";
     private static final int DEFAULT_SCROLLER_DURATION = 300;
-    private static final float DEFAULT_AUTO_OPEN_PERCENT = 0.35f;
+    private static final float DEFAULT_AUTO_OPEN_PERCENT = 0.5f;
     private float mAutoOpenPercent = DEFAULT_AUTO_OPEN_PERCENT;
     private int mScrollerDuration = DEFAULT_SCROLLER_DURATION;
 
@@ -35,8 +36,10 @@ public class SwipeMenuLayout extends FrameLayout {
     private boolean swipeEnable = true;
     private OverScroller mScroller;
     private Interpolator mInterpolator;
+    private VelocityTracker mVelocityTracker;
+    private int mScaledMinimumFlingVelocity;
 
-	public SwipeMenuLayout(Context context) {
+    public SwipeMenuLayout(Context context) {
 		this(context, null);
 	}
 
@@ -48,7 +51,7 @@ public class SwipeMenuLayout extends FrameLayout {
 		super(context, attrs, defStyle);
 		if(!isInEditMode()){
 			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
-            int interpolatorId = a.getResourceId(R.styleable.SwipeMenu_sml_scroller_interpolator, android.R.anim.accelerate_interpolator);
+            int interpolatorId = a.getResourceId(R.styleable.SwipeMenu_sml_scroller_interpolator, android.R.anim.linear_interpolator);
             mInterpolator = AnimationUtils.loadInterpolator(getContext(), interpolatorId);
 			mAutoOpenPercent = a.getFloat(R.styleable.SwipeMenu_sml_auto_open_percent, DEFAULT_AUTO_OPEN_PERCENT);
             mScrollerDuration = a.getInteger(R.styleable.SwipeMenu_sml_scroller_duration, DEFAULT_SCROLLER_DURATION);
@@ -58,18 +61,11 @@ public class SwipeMenuLayout extends FrameLayout {
 	}
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        boolean d = super.dispatchTouchEvent(ev);
-        return d;
-    }
-
-    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean isIntercepted = super.onInterceptTouchEvent(ev);
         int action = ev.getAction();
         switch (action){
             case MotionEvent.ACTION_DOWN:
-
                 mDownX = mLastX = (int) ev.getX();
                 mDownY = (int) ev.getY();
                 isIntercepted = false;
@@ -102,6 +98,9 @@ public class SwipeMenuLayout extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if(mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
+        mVelocityTracker.addMovement(ev);
+
 		int action = ev.getAction();
 		switch (action){
 			case MotionEvent.ACTION_DOWN:
@@ -134,10 +133,36 @@ public class SwipeMenuLayout extends FrameLayout {
                 break;
 			case MotionEvent.ACTION_UP:
                 mDragging = false;
-                judgeOpenClose();
+                mVelocityTracker.computeCurrentVelocity(1000);
+                int velocityX = (int) mVelocityTracker.getXVelocity();
+                if(Math.abs(velocityX) > mScaledMinimumFlingVelocity){
+                    if(mCurrentSwiper != null){
+                        int distance = mCurrentSwiper.getMenuWidth() - Math.abs(getScrollX());
+                        int duration = distance * Math.abs(velocityX) / 5000;
+                        if(mCurrentSwiper instanceof RightHorizontalSwiper){
+                            if(velocityX < 0){ // just open
+                                smoothOpenMenu(duration);
+                            }else{ // just close
+                                smoothCloseMenu(duration);
+                            }
+                        }else{
+                            if(velocityX > 0){ // just open
+                                smoothOpenMenu(duration);
+                            }else{ // just close
+                                smoothCloseMenu(duration);
+                            }
+                        }
+                        invalidate();
+                    }
+                }else{
+                    judgeOpenClose();
+                }
+                mVelocityTracker.clear();
+                mVelocityTracker.recycle();
+                mVelocityTracker = null;
                 if(Math.abs(mDownX - ev.getX()) > mScaledTouchSlop
                         || Math.abs(mDownY - ev.getY()) > mScaledTouchSlop
-                        || isMenuOpen()){
+                        || isMenuOpen()){ // ignore click listener
                     return true;
                 }
                 break;
@@ -178,12 +203,10 @@ public class SwipeMenuLayout extends FrameLayout {
         if(mScroller.computeScrollOffset()){
             if(mCurrentSwiper instanceof RightHorizontalSwiper){
                 scrollTo(Math.abs(mScroller.getCurrX()), 0);
-                postInvalidate();
-            }else if(mCurrentSwiper instanceof LeftHorizontalSwiper){
-                scrollTo(-Math.abs(mScroller.getCurrX()), 0);
-                postInvalidate();
+                invalidate();
             }else{
-                Log.e(TAG, "Invalid Swiper...");
+                scrollTo(-Math.abs(mScroller.getCurrX()), 0);
+                invalidate();
             }
         }
     }
@@ -234,31 +257,35 @@ public class SwipeMenuLayout extends FrameLayout {
         smoothCloseMenu();
     }
 
+    public void smoothOpenMenu(int duration) {
+        mCurrentSwiper.autoOpenMenu(mScroller, getScrollX(), duration);
+        invalidate();
+    }
+
     public void smoothOpenMenu() {
-        mCurrentSwiper.autoOpenMenu(mScroller, getScrollX(), mScrollerDuration);
-        postInvalidate();
+        smoothOpenMenu(mScrollerDuration);
+    }
+
+    public void smoothCloseMenu(int duration) {
+        mCurrentSwiper.autoCloseMenu(mScroller, getScrollX(), duration);
+        invalidate();
     }
 
 	public void smoothCloseMenu() {
-        mCurrentSwiper.autoCloseMenu(mScroller, getScrollX(), mScrollerDuration);
-        postInvalidate();
+        smoothCloseMenu(mScrollerDuration);
 	}
-
-    public boolean isMenuScrolling(){
-        return getScrollX() != 0;
-    }
 
     public void init() {
         ViewConfiguration mViewConfig = ViewConfiguration.get(getContext());
         mScaledTouchSlop = mViewConfig.getScaledTouchSlop();
         mScroller = new OverScroller(getContext(), mInterpolator);
+        mScaledMinimumFlingVelocity = mViewConfig.getScaledMinimumFlingVelocity();
     }
 
     @Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
         int parentViewWidth = ViewCompat.getMeasuredWidthAndState(this);
-
 		int contentViewWidth = ViewCompat.getMeasuredWidthAndState(mContentView);
 		int contentViewHeight = ViewCompat.getMeasuredHeightAndState(mContentView);
 		LayoutParams lp = (LayoutParams) mContentView.getLayoutParams();
@@ -268,7 +295,6 @@ public class SwipeMenuLayout extends FrameLayout {
 				tGap,
 				lGap + contentViewWidth,
 				tGap + contentViewHeight);
-
         if(mRightSwiper != null){
             int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mRightSwiper.getMenuView());
             int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mRightSwiper.getMenuView());
@@ -279,7 +305,6 @@ public class SwipeMenuLayout extends FrameLayout {
                     parentViewWidth + menuViewWidth,
                     tGap + menuViewHeight);
         }
-
         if(mLeftSwiper != null){
             int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mLeftSwiper.getMenuView());
             int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mLeftSwiper.getMenuView());
