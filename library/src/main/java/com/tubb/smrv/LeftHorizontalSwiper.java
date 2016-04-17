@@ -19,6 +19,11 @@ public class LeftHorizontalSwiper extends HorizontalSwiper{
     }
 
     @Override
+    public boolean isMenuOpenNotEqual(int scrollX) {
+        return scrollX < -getMenuView().getWidth() * getDirection();
+    }
+
+    @Override
     public void autoOpenMenu(OverScroller scroller, int scrollX, int duration) {
         scroller.startScroll(Math.abs(scrollX), 0, getMenuView().getWidth()-Math.abs(scrollX), 0, duration);
     }

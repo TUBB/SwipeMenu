@@ -22,6 +22,7 @@ public abstract class HorizontalSwiper {
     }
 
     public abstract boolean isMenuOpen(final int scrollX);
+    public abstract boolean isMenuOpenNotEqual(final int scrollX);
     public abstract void autoOpenMenu(OverScroller scroller, int scrollX, int duration);
     public abstract void autoCloseMenu(OverScroller scroller, int scrollX, int duration);
     public abstract Checker checkXY(int x, int y);

@@ -12,7 +12,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.3'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.4'
 }
 ```
 
@@ -82,6 +82,11 @@ Features
  * Not intercept item touch event
  * Left/Right menu support, free switch
 
+Thanks
+======
+
+Inspired by [baoyongzhang/SwipeMenuListView][1]
+
 License
 -------
 
@@ -98,3 +103,5 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+    
+[1]: https://github.com/baoyongzhang/SwipeMenuListView    
