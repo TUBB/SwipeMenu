@@ -2,20 +2,23 @@ package com.tubb.smrv.demo.normal;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseArray;
 import android.view.View;
 import android.widget.Toast;
 
 import com.tubb.smrv.SwipeMenuLayout;
 import com.tubb.smrv.demo.R;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class SimpleActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple);
-
+        
         final SwipeMenuLayout sml = (SwipeMenuLayout) findViewById(R.id.sml);
-
         findViewById(R.id.btLeftOpen).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

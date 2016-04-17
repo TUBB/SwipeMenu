@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
@@ -153,7 +151,6 @@ public class SwipeMenuLayout extends FrameLayout {
                 if(velocity > mScaledMinimumFlingVelocity){
                     if(mCurrentSwiper != null){
                         int duration = getSwipeDuration(ev, velocity);
-                        Log.e(TAG, "duration:"+duration);
                         if(mCurrentSwiper instanceof RightHorizontalSwiper){
                             if(velocityX < 0){ // just open
                                 smoothOpenMenu(duration);
@@ -227,12 +224,11 @@ public class SwipeMenuLayout extends FrameLayout {
 
     private void judgeOpenClose(int dx, int dy){
         if(mCurrentSwiper != null){
-            Log.e(TAG, "judge open or close:"+getScrollX());
             if(Math.abs(getScrollX()) >= (mCurrentSwiper.getMenuView().getWidth() * mAutoOpenPercent)){ // auto open
-                if(Math.abs(dx) > mScaledTouchSlop || Math.abs(dy) > mScaledTouchSlop){
+                if(Math.abs(dx) > mScaledTouchSlop || Math.abs(dy) > mScaledTouchSlop){ // swipe up
                     if(isMenuOpenNotEqual()) smoothCloseMenu();
                     else smoothOpenMenu();
-                }else{
+                }else{ // normal up
                     if(isMenuOpen()) smoothCloseMenu();
                     else smoothOpenMenu();
                 }
