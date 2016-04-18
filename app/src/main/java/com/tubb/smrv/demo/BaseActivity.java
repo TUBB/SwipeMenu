@@ -15,17 +15,17 @@ public class BaseActivity extends Activity{
         List<User> userList = new ArrayList<>();
         for (int i=0; i<100; i++){
             User user = new User();
-            user.userId = i+1000;
-            user.userName = "Pobi "+(i+1);
+            user.setUserId(i+1000);
+            user.setUserName("Pobi "+(i+1));
             int num = random.nextInt(4);
             if(num == 0){
-                user.photoRes = R.drawable.one;
+                user.setPhotoRes(R.drawable.one);
             }else if(num == 1){
-                user.photoRes = R.drawable.two;
+                user.setPhotoRes(R.drawable.two);
             }else if(num == 2){
-                user.photoRes = R.drawable.three;
+                user.setPhotoRes(R.drawable.three);
             }else if(num == 3){
-                user.photoRes = R.drawable.four;
+                user.setPhotoRes(R.drawable.four);
             }
             userList.add(user);
         }

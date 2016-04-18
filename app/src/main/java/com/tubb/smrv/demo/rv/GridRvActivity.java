@@ -72,7 +72,7 @@ public class GridRvActivity extends BaseActivity {
         @Override
         public int getItemViewType(int position) {
             User user = users.get(position);
-            if(user.userId % 2 == 0){
+            if(user.getUserId() % 2 == 0){
                 return VIEW_TYPE_DISABLE;
             }else{
                 return VIEW_TYPE_ENABLE;
@@ -80,9 +80,10 @@ public class GridRvActivity extends BaseActivity {
         }
 
         public boolean swipeEnableByViewType(int viewType) {
-            if(viewType == VIEW_TYPE_ENABLE) return true;
-            else if(viewType == VIEW_TYPE_DISABLE) return false;
-            else return true; // default
+            if(viewType == VIEW_TYPE_ENABLE)
+                return true;
+            else
+                return viewType != VIEW_TYPE_DISABLE;
         }
 
         @Override
@@ -99,14 +100,14 @@ public class GridRvActivity extends BaseActivity {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Hi " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.btGood.setVisibility(View.GONE);
             myViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Open " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Open " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +119,7 @@ public class GridRvActivity extends BaseActivity {
                     mAdapter.notifyItemRemoved(vh.getAdapterPosition());
                 }
             });
-            myViewHolder.tvName.setText(user.userName);
+            myViewHolder.tvName.setText(user.getUserName());
             myViewHolder.tvSwipeEnable.setVisibility(View.GONE);
 
         }
