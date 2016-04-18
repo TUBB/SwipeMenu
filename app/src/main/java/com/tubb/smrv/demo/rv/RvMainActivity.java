@@ -29,6 +29,8 @@ public class RvMainActivity extends Activity {
             case R.id.button4:
                 startActivity(new Intent(this, StaggeredGridRvActivity.class));
                 break;
+            default:
+                break;
         }
     }
 }
