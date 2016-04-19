@@ -2,7 +2,6 @@ package com.tubb.smrv.demo.rv;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,70 +11,39 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tubb.smrv.SwipeMenuLayout;
-import com.tubb.smrv.SwipeMenuRecyclerView;
-import com.tubb.smrv.demo.BaseActivity;
+import com.tubb.smrv.demo.AbstractRvActivity;
 import com.tubb.smrv.demo.R;
 import com.tubb.smrv.demo.User;
 
 import java.util.List;
 
-public class DifferentRvActivity extends BaseActivity {
-
-    private Context mContext;
-    private List<User> users;
-    private AppAdapter mAdapter;
-    private SwipeMenuRecyclerView mRecyclerView;
-    private SwipeRefreshLayout swipeRefreshLayout;
+public class DifferentRvActivity extends AbstractRvActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
-        mContext = this;
-        users = getUsers();
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                Toast.makeText(mContext, "Refresh success", Toast.LENGTH_LONG).show();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-        mRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id.listView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new AppAdapter(this, users);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
-    class AppAdapter extends RecyclerView.Adapter {
+    @Override
+    protected AbstractRvAdapter createAppAdapter(AbstractRvActivity baseRvActivity, List<User> users) {
+        return new DifferentRvAppAdapter(baseRvActivity, users);
+    }
+
+    private class DifferentRvAppAdapter extends AbstractRvAdapter {
 
         private static final int VIEW_TYPE_SIMPLE = 0;
         private static final int VIEW_TYPE_DIFFERENT = 1;
 
         List<User> users;
 
-        public AppAdapter(Context context, List<User> users){
-            this.users = users;
+        public DifferentRvAppAdapter(Context context, List<User> users){
+            super(context, users);
         }
 
         @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public int getItemCount() {
-            return users.size();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            User user = users.get(position);
-            if(user.userId % 2 == 0){
-                return VIEW_TYPE_SIMPLE;
-            }else{
-                return VIEW_TYPE_DIFFERENT;
-            }
+        protected RecyclerView.ViewHolder createViewHolder(View itemView) {
+            return null;
         }
 
         @Override
@@ -171,7 +139,7 @@ public class DifferentRvActivity extends BaseActivity {
         }
     }
 
-    public static class NormalViewHolder extends RecyclerView.ViewHolder{
+    public static class NormalViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         TextView tvSwipeEnable;
         View btGood;
@@ -189,7 +157,7 @@ public class DifferentRvActivity extends BaseActivity {
         }
     }
 
-    public static class DifferentViewHolder extends RecyclerView.ViewHolder{
+    public static class DifferentViewHolder extends RecyclerView.ViewHolder {
         TextView tvName;
         View btGood;
         View btFavorite;
