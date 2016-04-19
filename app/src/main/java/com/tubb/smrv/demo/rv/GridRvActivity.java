@@ -53,6 +53,28 @@ public class GridRvActivity extends AbstractRvActivity {
                 }
             });
             myViewHolder.btGood.setVisibility(View.GONE);
+            myViewHolder.getBtOpen().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Open " + user.getUserName(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            myViewHolder.getBtDelete().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // must close normal
+                    itemView.smoothCloseMenu();
+                    users.remove(vh.getAdapterPosition());
+                    mAdapter.notifyItemRemoved(vh.getAdapterPosition());
+                }
+            });
+            myViewHolder.btLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Left click", Toast.LENGTH_SHORT).show();
+                }
+            });
+            myViewHolder.getTvName().setText(user.getUserName());
             myViewHolder.tvSwipeEnable.setVisibility(View.GONE);
         }
     }
@@ -60,10 +82,12 @@ public class GridRvActivity extends AbstractRvActivity {
     public static class GridRvViewHolder extends AbstractRvActivity.AbstractViewHolder {
         TextView tvSwipeEnable;
         View btGood;
+        View btLeft;
         public GridRvViewHolder(View itemView) {
             super(itemView);
             tvSwipeEnable = (TextView) itemView.findViewById(R.id.tvSwipeEnable);
             btGood = itemView.findViewById(R.id.btGood);
+            btLeft = itemView.findViewById(R.id.btLeft);
         }
     }
 

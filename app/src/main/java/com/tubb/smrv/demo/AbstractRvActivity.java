@@ -31,18 +31,20 @@ public abstract class AbstractRvActivity extends Activity {
         List<User> userList = new ArrayList<>();
         for (int i=0; i<100; i++){
             User user = new User();
-            user.userId = i+1000;
-            user.userName = "Pobi "+(i+1);
+            user.setUserId(i+1000);
+            user.setUserName("Pobi "+(i+1));
             int num = random.nextInt(4);
+            int photoRes = 0;
             if(num == 0){
-                user.photoRes = R.drawable.one;
+                photoRes = R.drawable.one;
             }else if(num == 1){
-                user.photoRes = R.drawable.two;
+                photoRes = R.drawable.two;
             }else if(num == 2){
-                user.photoRes = R.drawable.three;
+                photoRes = R.drawable.three;
             }else if(num == 3){
-                user.photoRes = R.drawable.four;
+                photoRes = R.drawable.four;
             }
+            user.setPhotoRes(photoRes);
             userList.add(user);
         }
         return userList;
@@ -101,7 +103,7 @@ public abstract class AbstractRvActivity extends Activity {
             myViewHolder.getBtOpen().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Open " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Open " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.getBtDelete().setOnClickListener(new View.OnClickListener() {
@@ -113,7 +115,7 @@ public abstract class AbstractRvActivity extends Activity {
                     mAdapter.notifyItemRemoved(vh.getAdapterPosition());
                 }
             });
-            myViewHolder.getTvName().setText(user.userName);
+            myViewHolder.getTvName().setText(user.getUserName());
         }
 
         @Override
@@ -125,17 +127,6 @@ public abstract class AbstractRvActivity extends Activity {
         public int getItemCount() {
             return users.size();
         }
-
-        @Override
-        public int getItemViewType(int position) {
-            User user = users.get(position);
-            if(user.userId % 2 == 0){
-                return VIEW_TYPE_DISABLE;
-            }else{
-                return VIEW_TYPE_ENABLE;
-            }
-        }
-
         protected abstract RecyclerView.ViewHolder createViewHolder(View itemView);
     }
 

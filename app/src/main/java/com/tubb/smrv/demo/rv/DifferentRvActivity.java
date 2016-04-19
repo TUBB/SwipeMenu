@@ -35,8 +35,6 @@ public class DifferentRvActivity extends AbstractRvActivity {
         private static final int VIEW_TYPE_SIMPLE = 0;
         private static final int VIEW_TYPE_DIFFERENT = 1;
 
-        List<User> users;
-
         public DifferentRvAppAdapter(Context context, List<User> users){
             super(context, users);
         }
@@ -133,6 +131,17 @@ public class DifferentRvActivity extends AbstractRvActivity {
             });
             normalViewHolder.tvName.setText(user.getUserName());
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            User user = users.get(position);
+            if(user.getUserId() % 2 == 0){
+                return VIEW_TYPE_SIMPLE;
+            }else{
+                return VIEW_TYPE_DIFFERENT;
+            }
+        }
+
     }
 
     public static class NormalViewHolder extends RecyclerView.ViewHolder {

@@ -60,15 +60,23 @@ public class StaggeredGridRvActivity extends AbstractRvActivity {
                     Toast.makeText(mContext, "Hi " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
+            myViewHolder.btLeft.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "Left click", Toast.LENGTH_SHORT).show();
+                }
+            });
             myViewHolder.ivPhoto.setImageResource(user.getPhotoRes());
         }
     }
 
     public static class StaggeredGridRvViewHolder extends AbstractRvActivity.AbstractViewHolder {
         ImageView ivPhoto;
+        View btLeft;
         public StaggeredGridRvViewHolder(View itemView) {
             super(itemView);
             ivPhoto = (ImageView) itemView.findViewById(R.id.ivPhoto);
+            btLeft = itemView.findViewById(R.id.btLeft);
         }
     }
 
