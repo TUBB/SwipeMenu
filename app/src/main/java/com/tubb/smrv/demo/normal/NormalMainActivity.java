@@ -17,10 +17,8 @@ public class NormalMainActivity extends Activity {
     }
 
     public void onClick(View v){
-        switch (v.getId()) {
-            case R.id.button1:
-                startActivity(new Intent(this, SimpleActivity.class));
-                break;
+        if (v.getId() == R.id.button1) {
+            startActivity(new Intent(this, SimpleActivity.class));
         }
     }
 }

@@ -71,7 +71,7 @@ public class DifferentRvActivity extends BaseActivity {
         @Override
         public int getItemViewType(int position) {
             User user = users.get(position);
-            if(user.userId % 2 == 0){
+            if(user.getUserId() % 2 == 0){
                 return VIEW_TYPE_SIMPLE;
             }else{
                 return VIEW_TYPE_DIFFERENT;
@@ -80,13 +80,12 @@ public class DifferentRvActivity extends BaseActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch (viewType){
-                case VIEW_TYPE_SIMPLE:
-                    View simpleView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
-                    return new NormalViewHolder(simpleView);
-                case VIEW_TYPE_DIFFERENT:
-                    View differentView = LayoutInflater.from(mContext).inflate(R.layout.item_different, parent, false);
-                    return new DifferentViewHolder(differentView);
+            if (viewType == VIEW_TYPE_SIMPLE) {
+                View simpleView = LayoutInflater.from(mContext).inflate(R.layout.item_simple, parent, false);
+                return new NormalViewHolder(simpleView);
+            } else if(viewType == VIEW_TYPE_DIFFERENT){
+                View differentView = LayoutInflater.from(mContext).inflate(R.layout.item_different, parent, false);
+                return new DifferentViewHolder(differentView);
             }
 
             return null;
@@ -96,13 +95,10 @@ public class DifferentRvActivity extends BaseActivity {
         public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
             final User user = users.get(position);
             int viewType = getItemViewType(position);
-            switch (viewType){
-                case VIEW_TYPE_SIMPLE:
-                    fillSimpleView(vh, user);
-                    break;
-                case VIEW_TYPE_DIFFERENT:
-                    fillDifferentView((DifferentViewHolder) vh, user);
-                    break;
+            if (viewType == VIEW_TYPE_SIMPLE) {
+                fillSimpleView(vh, user);
+            } else if(viewType == VIEW_TYPE_DIFFERENT) {
+                fillDifferentView((DifferentViewHolder) vh, user);
             }
 
         }
@@ -110,11 +106,11 @@ public class DifferentRvActivity extends BaseActivity {
         private void fillDifferentView(DifferentViewHolder vh, final User user) {
             final DifferentViewHolder differentViewHolder = vh;
             SwipeMenuLayout itemView = (SwipeMenuLayout) differentViewHolder.itemView;
-            differentViewHolder.tvName.setText(user.userName);
+            differentViewHolder.tvName.setText(user.getUserName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Hi " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             differentViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +133,7 @@ public class DifferentRvActivity extends BaseActivity {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Hi " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             normalViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +145,7 @@ public class DifferentRvActivity extends BaseActivity {
             normalViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Open " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Open " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             normalViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +163,7 @@ public class DifferentRvActivity extends BaseActivity {
                     Toast.makeText(mContext, "Left click", Toast.LENGTH_SHORT).show();
                 }
             });
-            normalViewHolder.tvName.setText(user.userName);
+            normalViewHolder.tvName.setText(user.getUserName());
         }
     }
 

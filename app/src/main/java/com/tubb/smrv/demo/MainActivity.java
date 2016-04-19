@@ -19,13 +19,10 @@ public class MainActivity extends Activity {
     }
 
     public void onClick(View v){
-        switch (v.getId()) {
-            case R.id.button1:
-                startActivity(new Intent(this, SimpleActivity.class));
-                break;
-            case R.id.button2:
-                startActivity(new Intent(this, RvMainActivity.class));
-                break;
+        if (v.getId() == R.id.button1) {
+            startActivity(new Intent(this, SimpleActivity.class));
+        } else if(v.getId() == R.id.button2) {
+            startActivity(new Intent(this, RvMainActivity.class));
         }
     }
 }

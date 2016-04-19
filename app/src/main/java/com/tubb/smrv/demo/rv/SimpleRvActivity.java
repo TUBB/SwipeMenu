@@ -76,7 +76,7 @@ public class SimpleRvActivity extends BaseActivity {
         @Override
         public int getItemViewType(int position) {
             User user = users.get(position);
-            if(user.userId % 2 == 0){
+            if(user.getUserId() % 2 == 0){
                 return VIEW_TYPE_DISABLE;
             }else{
                 return VIEW_TYPE_ENABLE;
@@ -84,9 +84,10 @@ public class SimpleRvActivity extends BaseActivity {
         }
 
         public boolean swipeEnableByViewType(int viewType) {
-            if(viewType == VIEW_TYPE_ENABLE) return true;
-            else if(viewType == VIEW_TYPE_DISABLE) return false;
-            else return true; // default
+            if(viewType == VIEW_TYPE_ENABLE)
+                return true;
+            else
+                return viewType != VIEW_TYPE_DISABLE;
         }
 
         @Override
@@ -102,7 +103,7 @@ public class SimpleRvActivity extends BaseActivity {
             myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Hi " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Hi " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.btGood.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +115,7 @@ public class SimpleRvActivity extends BaseActivity {
             myViewHolder.btOpen.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "Open " + user.userName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Open " + user.getUserName(), Toast.LENGTH_SHORT).show();
                 }
             });
             myViewHolder.btDelete.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +135,7 @@ public class SimpleRvActivity extends BaseActivity {
                 }
             });
 
-            myViewHolder.tvName.setText(user.userName);
+            myViewHolder.tvName.setText(user.getUserName());
             boolean swipeEnable = swipeEnableByViewType(getItemViewType(position));
             myViewHolder.tvSwipeEnable.setText(swipeEnable ? "swipe on" : "swipe off");
             myViewHolder.sml.setSwipeEnable(swipeEnable);
