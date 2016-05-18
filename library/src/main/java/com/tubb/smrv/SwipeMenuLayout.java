@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -12,6 +13,9 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.OverScroller;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 public class SwipeMenuLayout extends FrameLayout {
 
@@ -38,7 +42,11 @@ public class SwipeMenuLayout extends FrameLayout {
     private VelocityTracker mVelocityTracker;
     private int mScaledMinimumFlingVelocity;
     private int mScaledMaximumFlingVelocity;
-
+    private SwipeListener mSwipeListener;
+    private NumberFormat mDecimalFormat = new DecimalFormat("#.00");
+    private int mPreScrollX;
+    private float mPreLeftMenuFraction = -1;
+    private float mPreRightMenuFraction = -1;
 
     public SwipeMenuLayout(Context context) {
 		this(context, null);
@@ -164,7 +172,8 @@ public class SwipeMenuLayout extends FrameLayout {
                                 smoothCloseMenu(duration);
                             }
                         }
-                        ViewCompat.postInvalidateOnAnimation(this);                    }
+                        ViewCompat.postInvalidateOnAnimation(this);
+                    }
                 }else{
                     judgeOpenClose(dx, dy);
                 }
@@ -191,37 +200,6 @@ public class SwipeMenuLayout extends FrameLayout {
         return super.onTouchEvent(ev);
     }
 
-    /**
-     * compute finish duration
-     * @param ev up event
-     * @param velocity velocity x
-     * @return finish duration
-     */
-    private int getSwipeDuration(MotionEvent ev, int velocity) {
-        int sx = getScrollX();
-        int dx = (int) (ev.getX() - sx);
-        final int width = mCurrentSwiper.getMenuWidth();
-        final int halfWidth = width / 2;
-        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
-        final float distance = halfWidth + halfWidth *
-                distanceInfluenceForSnapDuration(distanceRatio);
-        int duration = 0;
-        if (velocity > 0) {
-            duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
-        } else {
-            final float pageDelta = (float) Math.abs(dx) / width;
-            duration = (int) ((pageDelta + 1) * 100);
-        }
-        duration = Math.min(duration, mScrollerDuration);
-        return duration;
-    }
-
-    float distanceInfluenceForSnapDuration(float f) {
-        f -= 0.5f; // center the values about 0.
-        f *= 0.3f * Math.PI / 2.0f;
-        return (float) Math.sin(f);
-    }
-
     private void judgeOpenClose(int dx, int dy){
         if(mCurrentSwiper != null){
             if(Math.abs(getScrollX()) >= (mCurrentSwiper.getMenuView().getWidth() * mAutoOpenPercent)){ // auto open
@@ -245,17 +223,55 @@ public class SwipeMenuLayout extends FrameLayout {
         if (checker.x != getScrollX()){
             super.scrollTo(checker.x, checker.y);
         }
+
+        if(getScrollX() != mPreScrollX){
+            int absScrollX = Math.abs(getScrollX());
+            if(mCurrentSwiper instanceof LeftHorizontalSwiper){
+                if(mSwipeListener != null) {
+                    float fraction = (float) absScrollX / mLeftSwiper.getMenuWidth();
+                    fraction = Float.parseFloat(mDecimalFormat.format(fraction));
+                    if(fraction != mPreLeftMenuFraction){
+                        mSwipeListener.leftMenuSwipeFraction(fraction);
+                    }
+                    mPreLeftMenuFraction = fraction;
+                    if(absScrollX == 0) mSwipeListener.leftMenuClosed();
+                    else if (absScrollX == mLeftSwiper.getMenuWidth()) mSwipeListener.leftMenuOpened();
+                }
+            }else{
+                if(mSwipeListener != null) {
+                    float fraction = (float) absScrollX / mRightSwiper.getMenuWidth();
+                    fraction = Float.parseFloat(mDecimalFormat.format(fraction));
+                    if(fraction != mPreRightMenuFraction){
+                        mSwipeListener.rightMenuSwipeFraction(fraction);
+                    }
+                    mPreRightMenuFraction = fraction;
+                    if(absScrollX == 0) mSwipeListener.rightMenuClosed();
+                    else if (absScrollX == mRightSwiper.getMenuWidth()) mSwipeListener.rightMenuOpened();
+                }
+            }
+        }
+        mPreScrollX = getScrollX();
     }
 
     @Override
     public void computeScroll() {
         if(mScroller.computeScrollOffset()){
+
+            int currX = Math.abs(mScroller.getCurrX());
             if(mCurrentSwiper instanceof RightHorizontalSwiper){
-                scrollTo(Math.abs(mScroller.getCurrX()), 0);
+                scrollTo(currX, 0);
                 invalidate();
+//                if(mSwipeListener != null) {
+//
+//
+//
+//                    float fraction = (float) currX / mRightSwiper.getMenuWidth();
+//                    mSwipeListener.rightMenuSwipeFraction(fraction);
+//                }
             }else{
-                scrollTo(-Math.abs(mScroller.getCurrX()), 0);
+                scrollTo(-currX, 0);
                 invalidate();
+
             }
         }
     }
@@ -378,5 +394,40 @@ public class SwipeMenuLayout extends FrameLayout {
 
     public boolean isSwipeEnable() {
         return swipeEnable;
+    }
+
+    public void setSwipeListener(SwipeListener swipeListener) {
+        mSwipeListener = swipeListener;
+    }
+
+    /**
+     * compute finish duration
+     * @param ev up event
+     * @param velocity velocity x
+     * @return finish duration
+     */
+    int getSwipeDuration(MotionEvent ev, int velocity) {
+        int sx = getScrollX();
+        int dx = (int) (ev.getX() - sx);
+        final int width = mCurrentSwiper.getMenuWidth();
+        final int halfWidth = width / 2;
+        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
+        final float distance = halfWidth + halfWidth *
+                distanceInfluenceForSnapDuration(distanceRatio);
+        int duration = 0;
+        if (velocity > 0) {
+            duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
+        } else {
+            final float pageDelta = (float) Math.abs(dx) / width;
+            duration = (int) ((pageDelta + 1) * 100);
+        }
+        duration = Math.min(duration, mScrollerDuration);
+        return duration;
+    }
+
+    float distanceInfluenceForSnapDuration(float f) {
+        f -= 0.5f; // center the values about 0.
+        f *= 0.3f * Math.PI / 2.0f;
+        return (float) Math.sin(f);
     }
 }

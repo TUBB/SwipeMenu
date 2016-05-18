@@ -1,6 +1,8 @@
 package com.tubb.smrv.demo;
 
 import android.app.Activity;
+import android.app.DownloadManager;
+import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;

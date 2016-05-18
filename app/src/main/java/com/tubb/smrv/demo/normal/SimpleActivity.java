@@ -2,10 +2,13 @@ package com.tubb.smrv.demo.normal;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Toast;
 
+import com.tubb.smrv.SimpleSwipeListener;
+import com.tubb.smrv.SwipeListener;
 import com.tubb.smrv.SwipeMenuLayout;
 import com.tubb.smrv.demo.R;
 
@@ -13,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SimpleActivity extends Activity {
+
+    private static final String TAG = "sml";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +87,44 @@ public class SimpleActivity extends Activity {
                 Toast.makeText(SimpleActivity.this, "right button onclick", Toast.LENGTH_SHORT).show();
             }
         });
+        sml.setSwipeListener(new SwipeListener() {
+            @Override
+            public void leftMenuClosed() {
+                Log.e(TAG, "left menu closed");
+            }
+
+            @Override
+            public void leftMenuOpened() {
+                Log.e(TAG, "left menu opened");
+            }
+
+            @Override
+            public void rightMenuClosed() {
+                Log.e(TAG, "right menu closed");
+            }
+
+            @Override
+            public void rightMenuOpened() {
+                Log.e(TAG, "right menu opened");
+            }
+
+            @Override
+            public void leftMenuSwipeFraction(float fraction) {
+                Log.e(TAG, "left menu swipe fraction:"+fraction);
+            }
+
+            @Override
+            public void rightMenuSwipeFraction(float fraction) {
+                Log.e(TAG, "right menu swipe fraction:"+fraction);
+            }
+        });
+
+//        sml.setSwipeListener(new SimpleSwipeListener(){
+//            @Override
+//            public void leftMenuSwipeFraction(float fraction) {
+//                Log.e(TAG, "left menu swipe fraction:"+fraction);
+//            }
+//        });
     }
 
 }

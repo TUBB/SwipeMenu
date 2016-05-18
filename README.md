@@ -12,7 +12,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.4'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.5'
 }
 ```
 
@@ -52,7 +52,52 @@ If you have so many items, you may be want to use our custom RecyclerView
 
 </android.support.v4.widget.SwipeRefreshLayout>
 ```
-More details please see the demo project.
+More details please see the demo project
+
+We add a [SwipeListener][2] for actions like open/close and swipe complete fraction
+```java
+sml.setSwipeListener(new SwipeListener() {
+    @Override
+    public void leftMenuClosed() {
+        Log.e(TAG, "left menu closed");
+    }
+
+    @Override
+    public void leftMenuOpened() {
+        Log.e(TAG, "left menu opened");
+    }
+
+    @Override
+    public void rightMenuClosed() {
+        Log.e(TAG, "right menu closed");
+    }
+
+    @Override
+    public void rightMenuOpened() {
+        Log.e(TAG, "right menu opened");
+    }
+
+    @Override
+    public void leftMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "left menu swipe fraction:"+fraction);
+    }
+
+    @Override
+    public void rightMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "right menu swipe fraction:"+fraction);
+    }
+});
+```
+
+If you just case few actions, just use [SimpleSwipeListener][3]
+```java
+sml.setSwipeListener(new SimpleSwipeListener(){
+    @Override
+    public void leftMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "left menu swipe fraction:"+fraction);
+    }
+});
+```
 
 Custom
 ======
@@ -104,4 +149,6 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
     
-[1]: https://github.com/baoyongzhang/SwipeMenuListView    
+[1]: https://github.com/baoyongzhang/SwipeMenuListView
+[2]: https://github.com/TUBB/SwipeMenuRecyclerView/tree/master/library/src/main/java/com/tubb/smrv/SwipeListener.java
+[3]: https://github.com/TUBB/SwipeMenuRecyclerView/tree/master/library/src/main/java/com/tubb/smrv/SimpleSwipeListener.java
