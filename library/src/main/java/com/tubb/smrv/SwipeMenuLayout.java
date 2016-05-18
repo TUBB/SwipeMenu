@@ -256,7 +256,6 @@ public class SwipeMenuLayout extends FrameLayout {
     @Override
     public void computeScroll() {
         if(mScroller.computeScrollOffset()){
-
             int currX = Math.abs(mScroller.getCurrX());
             if(mCurrentSwiper instanceof RightHorizontalSwiper){
                 scrollTo(currX, 0);
