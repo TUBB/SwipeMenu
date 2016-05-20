@@ -218,17 +218,6 @@ Supported custom attrs:
 </resources>
 ```
 
-<<<<<<< de6be210260b4b9dd0452139f73dcff773051ef4
-Features
-======== 
- 
- * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (only horizontal)
- * On-off swipe ability
- * Not intercept item touch event
- * Left/Right and Top/Bottom menu support, free switch
-
-=======
->>>>>>> support top/bottom menu
 Thanks
 ======
 
