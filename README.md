@@ -2,6 +2,14 @@ SwipeMenu
 =========
 A swipe menu for `horizontal/vertical`, support `left/right add top/bottom` directions, low coupling, can fast rapid integration into your project
 
+Features
+======== 
+ 
+ * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (only horizontal)
+ * On-off swipe ability
+ * Not intercept item touch event
+ * Left/Right and Top/Bottom menu support, free switch
+
 Preview
 =======
 ![DEMO](https://github.com/TUBB/SwipeMenu/blob/master/art/demo.gif)
@@ -16,7 +24,7 @@ dependencies {
 }
 ```
 
-#### horizontal
+#### Horizontal
 Just use `SwipeHorizontalMenuLayout`, we use `SwipeHorizontalMenuLayout` ViewGroup to combine item content view and `left/right(at least one)` swipe menu
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -54,7 +62,8 @@ If you have so many items, you may be want to use our custom RecyclerView
 
 </android.support.v4.widget.SwipeRefreshLayout>
 ```
-### vertical
+
+### Vertical
 Just use `SwipeVerticalMenuLayout`, we use `SwipeVerticalMenuLayout` ViewGroup to combine item content view and `top/bottom (at least one)` swipe menu
 ```xml
 <com.tubb.smrv.SwipeVerticalMenuLayout
@@ -127,6 +136,7 @@ Just use `SwipeVerticalMenuLayout`, we use `SwipeVerticalMenuLayout` ViewGroup t
 
 More details please see the demo project
 
+## Listeners
 We add a [SwipeSwitchListener][2] for actions like open/close
 ```java
 sml.setSwipeListener(new SwipeSwitchListener() {
@@ -152,7 +162,7 @@ sml.setSwipeListener(new SwipeSwitchListener() {
 });
 ```
 
-If you just case a few actions, just use [SimpleSwipeSwitchListener][3]
+If you case a few actions, just use [SimpleSwipeSwitchListener][3]
 ```java
 sml.setSwipeListener(new SimpleSwipeSwitchListener(){
     @Override
@@ -162,7 +172,7 @@ sml.setSwipeListener(new SimpleSwipeSwitchListener(){
 });
 ```
 
-we also add a [SwipeFractionListener][4] for complete fraction action
+We also add a [SwipeFractionListener][4] for complete fraction action
 ```java
 sml.setSwipeFractionListener(new SwipeFractionListener() {
     @Override
@@ -178,7 +188,7 @@ sml.setSwipeFractionListener(new SwipeFractionListener() {
 });
 ```
 
-If you just case a few actions, just use [SimpleSwipeFractionListener][5]
+If you case a few actions, just use [SimpleSwipeFractionListener][5]
 ```java
 sml.setSwipeFractionListener(new SimpleSwipeFractionListener(){
     @Override
@@ -208,6 +218,7 @@ Supported custom attrs:
 </resources>
 ```
 
+<<<<<<< de6be210260b4b9dd0452139f73dcff773051ef4
 Features
 ======== 
  
@@ -216,6 +227,8 @@ Features
  * Not intercept item touch event
  * Left/Right and Top/Bottom menu support, free switch
 
+=======
+>>>>>>> support top/bottom menu
 Thanks
 ======
 
