@@ -1,10 +1,10 @@
-SwipeMenuRecyclerView
-=================
-A swipe menu for cross slip, support left and right direction, low coupling, can fast rapid integration into your project
+SwipeMenu
+=========
+A swipe menu for `horizontal/vertical`, support `left/right add top/bottom` directions, low coupling, can fast rapid integration into your project
 
 Preview
 =======
-![DEMO](https://github.com/TUBB/SwipeMenuRecyclerView/blob/master/art/demo.gif)
+![DEMO](https://github.com/TUBB/SwipeMenu/blob/master/art/demo.gif)
 
 Usage
 =====
@@ -12,26 +12,28 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:4.0.5'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.0.0'
 }
 ```
 
-Just use `SwipeMenuLayout`, we use `SwipeMenuLayout` ViewGroup to combine item content view and `left/right(at least one)` swipe menu
+#### horizontal
+Just use `SwipeHorizontalMenuLayout`, we use `SwipeHorizontalMenuLayout` ViewGroup to combine item content view and `left/right(at least one)` swipe menu
 ```xml
-<com.tubb.smrv.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.tubb.smrv.SwipeHorizontalMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sml="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sml"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     sml:sml_scroller_interpolator="@android:anim/bounce_interpolator"
-    sml:sml_auto_open_percent="0.5"
+    sml:sml_auto_open_percent="0.2"
     sml:sml_scroller_duration="250">
 
     <include android:id="@id/smContentView" layout="@layout/item_simple_content"/>
     <include android:id="@id/smMenuViewLeft" layout="@layout/item_simple_left_menu"/>
     <include android:id="@id/smMenuViewRight" layout="@layout/item_simple_right_menu"/>
 
-</com.tubb.smrv.SwipeMenuLayout>
+</com.tubb.smrv.SwipeHorizontalMenuLayout>
 ```
 
 If you have so many items, you may be want to use our custom RecyclerView
@@ -52,49 +54,136 @@ If you have so many items, you may be want to use our custom RecyclerView
 
 </android.support.v4.widget.SwipeRefreshLayout>
 ```
+### vertical
+Just use `SwipeVerticalMenuLayout`, we use `SwipeVerticalMenuLayout` ViewGroup to combine item content view and `top/bottom (at least one)` swipe menu
+```xml
+<com.tubb.smrv.SwipeVerticalMenuLayout
+    android:id="@+id/sml"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
+
+    <LinearLayout
+        android:id="@id/smMenuViewTop"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:background="@android:color/holo_green_light"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="top"
+            android:textColor="@color/white"
+            android:layout_gravity="top"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@id/smContentView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/red">
+
+        <Button
+            android:id="@+id/btLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Top"
+            android:layout_centerHorizontal="true"
+            />
+
+        <Button
+            android:id="@+id/btRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bottom"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@id/smMenuViewBottom"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:orientation="horizontal"
+        android:clickable="true"
+        android:background="@android:color/holo_blue_light"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="bottom"
+            android:textColor="@color/white"
+            android:layout_gravity="bottom"/>
+
+    </LinearLayout>
+</com.tubb.smrv.SwipeVerticalMenuLayout>
+```
+
 More details please see the demo project
 
-We add a [SwipeListener][2] for actions like open/close and swipe complete fraction
+We add a [SwipeSwitchListener][2] for actions like open/close
 ```java
-sml.setSwipeListener(new SwipeListener() {
+sml.setSwipeListener(new SwipeSwitchListener() {
     @Override
-    public void leftMenuClosed() {
+    public void beginMenuClosed() {
         Log.e(TAG, "left menu closed");
     }
 
     @Override
-    public void leftMenuOpened() {
+    public void beginMenuOpened() {
         Log.e(TAG, "left menu opened");
     }
 
     @Override
-    public void rightMenuClosed() {
+    public void endMenuClosed() {
         Log.e(TAG, "right menu closed");
     }
 
     @Override
-    public void rightMenuOpened() {
+    public void endMenuOpened() {
         Log.e(TAG, "right menu opened");
-    }
-
-    @Override
-    public void leftMenuSwipeFraction(float fraction) {
-        Log.e(TAG, "left menu swipe fraction:"+fraction);
-    }
-
-    @Override
-    public void rightMenuSwipeFraction(float fraction) {
-        Log.e(TAG, "right menu swipe fraction:"+fraction);
     }
 });
 ```
 
-If you just case few actions, just use [SimpleSwipeListener][3]
+If you just case a few actions, just use [SimpleSwipeSwitchListener][3]
 ```java
-sml.setSwipeListener(new SimpleSwipeListener(){
+sml.setSwipeListener(new SimpleSwipeSwitchListener(){
     @Override
-    public void leftMenuSwipeFraction(float fraction) {
-        Log.e(TAG, "left menu swipe fraction:"+fraction);
+    public void beginMenuClosed() {
+        Log.e(TAG, "left menu closed");
+    }
+});
+```
+
+we also add a [SwipeFractionListener][4] for complete fraction action
+```java
+sml.setSwipeFractionListener(new SwipeFractionListener() {
+    @Override
+    public void beginMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "top menu swipe fraction:"+fraction);
+
+    }
+
+    @Override
+    public void endMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "bottom menu swipe fraction:"+fraction);
+    }
+});
+```
+
+If you just case a few actions, just use [SimpleSwipeFractionListener][5]
+```java
+sml.setSwipeFractionListener(new SimpleSwipeFractionListener(){
+    @Override
+    public void beginMenuSwipeFraction(float fraction) {
+        Log.e(TAG, "top menu swipe fraction:"+fraction);
     }
 });
 ```
@@ -122,10 +211,10 @@ Supported custom attrs:
 Features
 ======== 
  
- * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView
+ * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (only horizontal)
  * On-off swipe ability
  * Not intercept item touch event
- * Left/Right menu support, free switch
+ * Left/Right and Top/Bottom menu support, free switch
 
 Thanks
 ======
@@ -150,5 +239,7 @@ License
     limitations under the License.
     
 [1]: https://github.com/baoyongzhang/SwipeMenuListView
-[2]: https://github.com/TUBB/SwipeMenuRecyclerView/tree/master/library/src/main/java/com/tubb/smrv/SwipeListener.java
-[3]: https://github.com/TUBB/SwipeMenuRecyclerView/tree/master/library/src/main/java/com/tubb/smrv/SimpleSwipeListener.java
+[2]: https://github.com/TUBB/SwipeMenu/tree/master/library/src/main/java/com/tubb/smrv/listener/SwipeSwitchListener.java
+[3]: https://github.com/TUBB/SwipeMenu/tree/master/library/src/main/java/com/tubb/smrv/listener/SimpleSwipeSwitchListener.java
+[4]: https://github.com/TUBB/SwipeMenu/tree/master/library/src/main/java/com/tubb/smrv/listener/SwipeFractionListener.java
+[5]: https://github.com/TUBB/SwipeMenu/tree/master/library/src/main/java/com/tubb/smrv/listener/SimpleSwipeFractionListener.java

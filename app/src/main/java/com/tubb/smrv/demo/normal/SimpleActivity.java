@@ -108,6 +108,13 @@ public class SimpleActivity extends Activity {
 
         });
 
+//        sml.setSwipeListener(new SimpleSwipeSwitchListener(){
+//            @Override
+//            public void beginMenuClosed() {
+//                Log.e(TAG, "left menu closed");
+//            }
+//        });
+
         sml.setSwipeFractionListener(new SwipeFractionListener() {
             @Override
             public void beginMenuSwipeFraction(float fraction) {

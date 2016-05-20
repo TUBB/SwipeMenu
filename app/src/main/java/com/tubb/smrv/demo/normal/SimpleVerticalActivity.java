@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.tubb.smrv.SwipeVerticalMenuLayout;
 import com.tubb.smrv.demo.R;
-import com.tubb.smrv.listener.SwipeFractionListener;
 import com.tubb.smrv.listener.SwipeSwitchListener;
 
 public class SimpleVerticalActivity extends Activity {
@@ -116,6 +115,23 @@ public class SimpleVerticalActivity extends Activity {
 //            @Override
 //            public void endMenuSwipeFraction(float fraction) {
 //                Log.e(TAG, "bottom menu swipe fraction:"+fraction);
+//            }
+//        });
+//        sml.setSwipeFractionListener(new SwipeFractionListener() {
+//            @Override
+//            public void beginMenuSwipeFraction(float fraction) {
+//                Log.e(TAG, "top menu swipe fraction:"+fraction);
+//            }
+//
+//            @Override
+//            public void endMenuSwipeFraction(float fraction) {
+//                Log.e(TAG, "bottom menu swipe fraction:"+fraction);
+//            }
+//        });
+//        sml.setSwipeFractionListener(new SimpleSwipeFractionListener(){
+//            @Override
+//            public void beginMenuSwipeFraction(float fraction) {
+//                Log.e(TAG, "top menu swipe fraction:"+fraction);
 //            }
 //        });
     }
