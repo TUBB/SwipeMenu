@@ -1,74 +1,34 @@
 package com.tubb.smrv;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.animation.AnimationUtils;
-import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.OverScroller;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import com.tubb.smrv.listener.SwipeSwitchListener;
+import com.tubb.smrv.swiper.LeftHorizontalSwiper;
+import com.tubb.smrv.swiper.RightHorizontalSwiper;
+import com.tubb.smrv.swiper.Swiper;
 
-public class SwipeMenuLayout extends FrameLayout {
+public class SwipeHorizontalMenuLayout extends MenuLayout {
 
-    private static final String TAG = "sml";
-    private static final int DEFAULT_SCROLLER_DURATION = 300;
-    private static final float DEFAULT_AUTO_OPEN_PERCENT = 0.5f;
-    private float mAutoOpenPercent = DEFAULT_AUTO_OPEN_PERCENT;
-    private int mScrollerDuration = DEFAULT_SCROLLER_DURATION;
+    protected int mPreScrollX;
+    protected float mPreLeftMenuFraction = -1;
+    protected float mPreRightMenuFraction = -1;
 
-    private int mScaledTouchSlop;
-    private int mLastX;
-    private int mLastY;
-    private int mDownX;
-    private int mDownY;
-	private View mContentView;
-    private HorizontalSwiper mLeftSwiper;
-    private HorizontalSwiper mRightSwiper;
-    private HorizontalSwiper mCurrentSwiper;
-    private boolean shouldResetSwiper;
-    private boolean mDragging;
-    private boolean swipeEnable = true;
-    private OverScroller mScroller;
-    private Interpolator mInterpolator;
-    private VelocityTracker mVelocityTracker;
-    private int mScaledMinimumFlingVelocity;
-    private int mScaledMaximumFlingVelocity;
-    private SwipeListener mSwipeListener;
-    private NumberFormat mDecimalFormat = new DecimalFormat("#.00");
-    private int mPreScrollX;
-    private float mPreLeftMenuFraction = -1;
-    private float mPreRightMenuFraction = -1;
+    public SwipeHorizontalMenuLayout(Context context) {
+        super(context);
+    }
 
-    public SwipeMenuLayout(Context context) {
-		this(context, null);
-	}
+    public SwipeHorizontalMenuLayout(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
 
-	public SwipeMenuLayout(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
-
-	public SwipeMenuLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		if(!isInEditMode()){
-			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
-            int interpolatorId = a.getResourceId(R.styleable.SwipeMenu_sml_scroller_interpolator, -1);
-            if(interpolatorId > 0)
-                mInterpolator = AnimationUtils.loadInterpolator(getContext(), interpolatorId);
-			mAutoOpenPercent = a.getFloat(R.styleable.SwipeMenu_sml_auto_open_percent, DEFAULT_AUTO_OPEN_PERCENT);
-            mScrollerDuration = a.getInteger(R.styleable.SwipeMenu_sml_scroller_duration, DEFAULT_SCROLLER_DURATION);
-            a.recycle();
-		}
-        init();
-	}
+    public SwipeHorizontalMenuLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -94,7 +54,7 @@ public class SwipeMenuLayout extends FrameLayout {
                 // menu view opened and click on content view,
                 // we just close the menu view and intercept the up event
                 if(isMenuOpen()
-                        && mCurrentSwiper.isClickOnContentView(getWidth(), ev.getX())){
+                        && mCurrentSwiper.isClickOnContentView(this, ev.getX())){
                     smoothCloseMenu();
                     isIntercepted = true;
                 }
@@ -112,8 +72,8 @@ public class SwipeMenuLayout extends FrameLayout {
     public boolean onTouchEvent(MotionEvent ev) {
         if(mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
         mVelocityTracker.addMovement(ev);
-        int dx = 0;
-        int dy = 0;
+        int dx;
+        int dy;
 		int action = ev.getAction();
 		switch (action){
 			case MotionEvent.ACTION_DOWN:
@@ -132,15 +92,15 @@ public class SwipeMenuLayout extends FrameLayout {
                 if (mDragging) {
                     if(mCurrentSwiper == null || shouldResetSwiper){
                         if(disX < 0){
-                            if(mLeftSwiper != null)
-                                mCurrentSwiper = mLeftSwiper;
+                            if(mBeginSwiper != null)
+                                mCurrentSwiper = mBeginSwiper;
                             else
-                                mCurrentSwiper = mRightSwiper;
+                                mCurrentSwiper = mEndSwiper;
                         }else{
-                            if(mRightSwiper != null)
-                                mCurrentSwiper = mRightSwiper;
+                            if(mEndSwiper != null)
+                                mCurrentSwiper = mEndSwiper;
                             else
-                                mCurrentSwiper = mLeftSwiper;
+                                mCurrentSwiper = mBeginSwiper;
                         }
                     }
                     scrollBy(disX, 0);
@@ -218,35 +178,38 @@ public class SwipeMenuLayout extends FrameLayout {
 
     @Override
     public void scrollTo(int x, int y) {
-        HorizontalSwiper.Checker checker = mCurrentSwiper.checkXY(x, y);
+        Swiper.Checker checker = mCurrentSwiper.checkXY(x, y);
         shouldResetSwiper = checker.shouldResetSwiper;
         if (checker.x != getScrollX()){
             super.scrollTo(checker.x, checker.y);
         }
-
         if(getScrollX() != mPreScrollX){
             int absScrollX = Math.abs(getScrollX());
             if(mCurrentSwiper instanceof LeftHorizontalSwiper){
-                if(mSwipeListener != null) {
-                    float fraction = (float) absScrollX / mLeftSwiper.getMenuWidth();
+                if(mSwipeSwitchListener != null) {
+                    if(absScrollX == 0) mSwipeSwitchListener.beginMenuClosed();
+                    else if (absScrollX == mBeginSwiper.getMenuWidth()) mSwipeSwitchListener.beginMenuOpened();
+                }
+                if(mSwipeFractionListener != null){
+                    float fraction = (float) absScrollX / mBeginSwiper.getMenuWidth();
                     fraction = Float.parseFloat(mDecimalFormat.format(fraction));
                     if(fraction != mPreLeftMenuFraction){
-                        mSwipeListener.leftMenuSwipeFraction(fraction);
+                        mSwipeFractionListener.beginMenuSwipeFraction(fraction);
                     }
                     mPreLeftMenuFraction = fraction;
-                    if(absScrollX == 0) mSwipeListener.leftMenuClosed();
-                    else if (absScrollX == mLeftSwiper.getMenuWidth()) mSwipeListener.leftMenuOpened();
                 }
             }else{
-                if(mSwipeListener != null) {
-                    float fraction = (float) absScrollX / mRightSwiper.getMenuWidth();
+                if(mSwipeSwitchListener != null) {
+                    if(absScrollX == 0) mSwipeSwitchListener.endMenuClosed();
+                    else if (absScrollX == mEndSwiper.getMenuWidth()) mSwipeSwitchListener.endMenuOpened();
+                }
+                if(mSwipeFractionListener != null){
+                    float fraction = (float) absScrollX / mEndSwiper.getMenuWidth();
                     fraction = Float.parseFloat(mDecimalFormat.format(fraction));
                     if(fraction != mPreRightMenuFraction){
-                        mSwipeListener.rightMenuSwipeFraction(fraction);
+                        mSwipeFractionListener.endMenuSwipeFraction(fraction);
                     }
                     mPreRightMenuFraction = fraction;
-                    if(absScrollX == 0) mSwipeListener.rightMenuClosed();
-                    else if (absScrollX == mRightSwiper.getMenuWidth()) mSwipeListener.rightMenuOpened();
                 }
             }
         }
@@ -288,42 +251,18 @@ public class SwipeMenuLayout extends FrameLayout {
 		if (menuViewLeft== null && menuViewRight == null) {
 			throw new IllegalArgumentException("Not find menuView by id (smMenuViewLeft, smMenuViewRight)");
 		}
-        if(menuViewLeft != null) mLeftSwiper = new LeftHorizontalSwiper(menuViewLeft);
-        if(menuViewRight != null) mRightSwiper = new RightHorizontalSwiper(menuViewRight);
+        if(menuViewLeft != null) mBeginSwiper = new LeftHorizontalSwiper(menuViewLeft);
+        if(menuViewRight != null) mEndSwiper = new RightHorizontalSwiper(menuViewRight);
 	}
 
     public boolean isMenuOpen() {
-		return (mLeftSwiper != null && mLeftSwiper.isMenuOpen(getScrollX()))
-                || (mRightSwiper != null && mRightSwiper.isMenuOpen(getScrollX()));
+		return (mBeginSwiper != null && mBeginSwiper.isMenuOpen(getScrollX()))
+                || (mEndSwiper != null && mEndSwiper.isMenuOpen(getScrollX()));
 	}
 
     public boolean isMenuOpenNotEqual() {
-        return (mLeftSwiper != null && mLeftSwiper.isMenuOpenNotEqual(getScrollX()))
-                || (mRightSwiper != null && mRightSwiper.isMenuOpenNotEqual(getScrollX()));
-    }
-
-    public void smoothOpenLeftMenu(){
-        if(mLeftSwiper == null) throw new IllegalArgumentException("Not have left menu!");
-        mCurrentSwiper = mLeftSwiper;
-        smoothOpenMenu();
-    }
-
-    public void smoothOpenRightMenu(){
-        if(mRightSwiper == null) throw new IllegalArgumentException("Not have right menu!");
-        mCurrentSwiper = mRightSwiper;
-        smoothOpenMenu();
-    }
-
-    public void smoothCloseLeftMenu(){
-        if(mLeftSwiper == null) throw new IllegalArgumentException("Not have left menu!");
-        mCurrentSwiper = mLeftSwiper;
-        smoothCloseMenu();
-    }
-
-    public void smoothCloseRightMenu(){
-        if(mRightSwiper == null) throw new IllegalArgumentException("Not have right menu!");
-        mCurrentSwiper = mRightSwiper;
-        smoothCloseMenu();
+        return (mBeginSwiper != null && mBeginSwiper.isMenuOpenNotEqual(getScrollX()))
+                || (mEndSwiper != null && mEndSwiper.isMenuOpenNotEqual(getScrollX()));
     }
 
     public void smoothOpenMenu(int duration) {
@@ -331,25 +270,9 @@ public class SwipeMenuLayout extends FrameLayout {
         invalidate();
     }
 
-    public void smoothOpenMenu() {
-        smoothOpenMenu(mScrollerDuration);
-    }
-
     public void smoothCloseMenu(int duration) {
         mCurrentSwiper.autoCloseMenu(mScroller, getScrollX(), duration);
         invalidate();
-    }
-
-	public void smoothCloseMenu() {
-        smoothCloseMenu(mScrollerDuration);
-	}
-
-    public void init() {
-        ViewConfiguration mViewConfig = ViewConfiguration.get(getContext());
-        mScaledTouchSlop = mViewConfig.getScaledTouchSlop();
-        mScroller = new OverScroller(getContext(), mInterpolator);
-        mScaledMinimumFlingVelocity = mViewConfig.getScaledMinimumFlingVelocity();
-        mScaledMaximumFlingVelocity = mViewConfig.getScaledMaximumFlingVelocity();
     }
 
     @Override
@@ -365,22 +288,22 @@ public class SwipeMenuLayout extends FrameLayout {
 				tGap,
 				lGap + contentViewWidth,
 				tGap + contentViewHeight);
-        if(mRightSwiper != null){
-            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mRightSwiper.getMenuView());
-            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mRightSwiper.getMenuView());
-            lp = (LayoutParams) mRightSwiper.getMenuView().getLayoutParams();
+        if(mEndSwiper != null){
+            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mEndSwiper.getMenuView());
+            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mEndSwiper.getMenuView());
+            lp = (LayoutParams) mEndSwiper.getMenuView().getLayoutParams();
             tGap = getPaddingTop() + lp.topMargin;
-            mRightSwiper.getMenuView().layout(parentViewWidth,
+            mEndSwiper.getMenuView().layout(parentViewWidth,
                     tGap,
                     parentViewWidth + menuViewWidth,
                     tGap + menuViewHeight);
         }
-        if(mLeftSwiper != null){
-            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mLeftSwiper.getMenuView());
-            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mLeftSwiper.getMenuView());
-            lp = (LayoutParams) mLeftSwiper.getMenuView().getLayoutParams();
+        if(mBeginSwiper != null){
+            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mBeginSwiper.getMenuView());
+            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mBeginSwiper.getMenuView());
+            lp = (LayoutParams) mBeginSwiper.getMenuView().getLayoutParams();
             tGap = getPaddingTop() + lp.topMargin;
-            mLeftSwiper.getMenuView().layout(-menuViewWidth,
+            mBeginSwiper.getMenuView().layout(-menuViewWidth,
                     tGap,
                     0,
                     tGap + menuViewHeight);
@@ -395,38 +318,17 @@ public class SwipeMenuLayout extends FrameLayout {
         return swipeEnable;
     }
 
-    public void setSwipeListener(SwipeListener swipeListener) {
-        mSwipeListener = swipeListener;
+    public void setSwipeListener(SwipeSwitchListener swipeSwitchListener) {
+        mSwipeSwitchListener = swipeSwitchListener;
     }
 
-    /**
-     * compute finish duration
-     * @param ev up event
-     * @param velocity velocity x
-     * @return finish duration
-     */
-    int getSwipeDuration(MotionEvent ev, int velocity) {
+    int getLen() {
+        return mCurrentSwiper.getMenuWidth();
+    }
+
+    int getMoveLen(MotionEvent ev) {
         int sx = getScrollX();
-        int dx = (int) (ev.getX() - sx);
-        final int width = mCurrentSwiper.getMenuWidth();
-        final int halfWidth = width / 2;
-        final float distanceRatio = Math.min(1f, 1.0f * Math.abs(dx) / width);
-        final float distance = halfWidth + halfWidth *
-                distanceInfluenceForSnapDuration(distanceRatio);
-        int duration = 0;
-        if (velocity > 0) {
-            duration = 4 * Math.round(1000 * Math.abs(distance / velocity));
-        } else {
-            final float pageDelta = (float) Math.abs(dx) / width;
-            duration = (int) ((pageDelta + 1) * 100);
-        }
-        duration = Math.min(duration, mScrollerDuration);
-        return duration;
+        return (int) (ev.getX() - sx);
     }
 
-    float distanceInfluenceForSnapDuration(float f) {
-        f -= 0.5f; // center the values about 0.
-        f *= 0.3f * Math.PI / 2.0f;
-        return (float) Math.sin(f);
-    }
 }

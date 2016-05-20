@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tubb.smrv.SwipeMenuLayout;
+import com.tubb.smrv.SwipeHorizontalMenuLayout;
 import com.tubb.smrv.demo.AbstractRvActivity;
 import com.tubb.smrv.demo.R;
 import com.tubb.smrv.demo.User;
@@ -71,7 +71,7 @@ public class DifferentRvActivity extends AbstractRvActivity {
 
         private void fillDifferentView(DifferentViewHolder vh, final User user) {
             final DifferentViewHolder differentViewHolder = vh;
-            SwipeMenuLayout itemView = (SwipeMenuLayout) differentViewHolder.itemView;
+            SwipeHorizontalMenuLayout itemView = (SwipeHorizontalMenuLayout) differentViewHolder.itemView;
             differentViewHolder.tvName.setText(user.getUserName());
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,7 +95,7 @@ public class DifferentRvActivity extends AbstractRvActivity {
 
         private void fillSimpleView(final RecyclerView.ViewHolder vh, final User user) {
             final NormalViewHolder normalViewHolder = (NormalViewHolder)vh;
-            final SwipeMenuLayout itemView = (SwipeMenuLayout) normalViewHolder.itemView;
+            final SwipeHorizontalMenuLayout itemView = (SwipeHorizontalMenuLayout) normalViewHolder.itemView;
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tubb.smrv.SwipeMenuLayout;
+import com.tubb.smrv.SwipeHorizontalMenuLayout;
 import com.tubb.smrv.demo.AbstractRvActivity;
 import com.tubb.smrv.demo.R;
 import com.tubb.smrv.demo.User;
@@ -44,7 +44,7 @@ public class GridRvActivity extends AbstractRvActivity {
         public void onBindViewHolder(final RecyclerView.ViewHolder vh, final int position) {
             super.onBindViewHolder(vh, position);
             final GridRvViewHolder myViewHolder = (GridRvViewHolder)vh;
-            final SwipeMenuLayout itemView = (SwipeMenuLayout) myViewHolder.itemView;
+            final SwipeHorizontalMenuLayout itemView = (SwipeHorizontalMenuLayout) myViewHolder.itemView;
             final User user = users.get(position);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

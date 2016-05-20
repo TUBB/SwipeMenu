@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tubb.smrv.SwipeMenuLayout;
+import com.tubb.smrv.SwipeHorizontalMenuLayout;
 import com.tubb.smrv.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public abstract class AbstractRvActivity extends Activity {
         public void onBindViewHolder(final RecyclerView.ViewHolder vh, int position) {
             final AbstractViewHolder myViewHolder = (AbstractViewHolder)vh;
             final User user = users.get(position);
-            final SwipeMenuLayout itemView = (SwipeMenuLayout) myViewHolder.itemView;
+            final SwipeHorizontalMenuLayout itemView = (SwipeHorizontalMenuLayout) myViewHolder.itemView;
             myViewHolder.getBtOpen().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

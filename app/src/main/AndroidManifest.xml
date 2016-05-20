@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".normal.NormalMainActivity"/>
         <activity android:name=".normal.SimpleActivity"/>
+        <activity android:name=".normal.SimpleVerticalActivity"/>
         <activity android:name=".rv.RvMainActivity"/>
         <activity android:name=".rv.SimpleRvActivity"/>
         <activity android:name=".rv.DifferentRvActivity"/>

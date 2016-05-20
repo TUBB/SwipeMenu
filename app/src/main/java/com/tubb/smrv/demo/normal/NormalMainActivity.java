@@ -19,6 +19,8 @@ public class NormalMainActivity extends Activity {
     public void onClick(View v){
         if (v.getId() == R.id.button1) {
             startActivity(new Intent(this, SimpleActivity.class));
+        }else if(v.getId() == R.id.button2){
+            startActivity(new Intent(this, SimpleVerticalActivity.class));
         }
     }
 }

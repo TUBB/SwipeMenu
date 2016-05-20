@@ -16,7 +16,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     private static final int INVALID_POSITION = -1;
 
     protected ViewConfiguration mViewConfig;
-    protected SwipeMenuLayout mOldSwipedView;
+    protected SwipeHorizontalMenuLayout mOldSwipedView;
     protected int mOldTouchedPosition = INVALID_POSITION;
     private int mDownX;
     private int mDownY;
@@ -41,7 +41,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     }
 
     private View getSwipeMenuView(ViewGroup itemView) {
-        if(itemView instanceof SwipeMenuLayout) return itemView;
+        if(itemView instanceof SwipeHorizontalMenuLayout) return itemView;
         List<View> unvisited = new ArrayList<>();
         unvisited.add(itemView);
         while (!unvisited.isEmpty()) {
@@ -49,7 +49,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
             if (!(child instanceof ViewGroup)) { // view
                 continue;
             }
-            if(child instanceof SwipeMenuLayout) return child;
+            if(child instanceof SwipeHorizontalMenuLayout) return child;
             ViewGroup group = (ViewGroup) child;
             final int childCount = group.getChildCount();
             for (int i=0; i<childCount; i++) unvisited.add(group.getChildAt(i));
@@ -77,8 +77,8 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 ViewHolder vh = findViewHolderForAdapterPosition(touchingPosition);
                 if(vh != null){
                     View itemView = getSwipeMenuView((ViewGroup) vh.itemView);
-                    if(itemView != null && itemView instanceof SwipeMenuLayout){
-                        mOldSwipedView = (SwipeMenuLayout) itemView;
+                    if(itemView != null && itemView instanceof SwipeHorizontalMenuLayout){
+                        mOldSwipedView = (SwipeHorizontalMenuLayout) itemView;
                         mOldTouchedPosition = touchingPosition;
                     }
                 }

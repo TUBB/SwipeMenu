@@ -1,4 +1,4 @@
-package com.tubb.smrv;
+package com.tubb.smrv.swiper;
 
 import android.view.View;
 import android.widget.OverScroller;
@@ -6,20 +6,20 @@ import android.widget.OverScroller;
 /**
  * Created by tubingbing on 16/4/11.
  */
-public class RightHorizontalSwiper extends HorizontalSwiper{
+public class LeftHorizontalSwiper extends Swiper {
 
-    public RightHorizontalSwiper(View menuView) {
-        super(RIGHT_DIRECTION, menuView);
+    public LeftHorizontalSwiper(View menuView) {
+        super(BEGIN_DIRECTION, menuView);
     }
 
     @Override
     public boolean isMenuOpen(int scrollX) {
-        return scrollX >= -getMenuView().getWidth() * getDirection();
+        return scrollX <= -getMenuView().getWidth() * getDirection();
     }
 
     @Override
     public boolean isMenuOpenNotEqual(int scrollX) {
-        return scrollX > -getMenuView().getWidth() * getDirection();
+        return scrollX < -getMenuView().getWidth() * getDirection();
     }
 
     @Override
@@ -40,17 +40,17 @@ public class RightHorizontalSwiper extends HorizontalSwiper{
         if(mChecker.x == 0){
             mChecker.shouldResetSwiper = true;
         }
-        if (mChecker.x < 0){
+        if (mChecker.x >= 0){
             mChecker.x = 0;
         }
-        if (mChecker.x > getMenuView().getWidth()){
-            mChecker.x = getMenuView().getWidth();
+        if (mChecker.x <= -getMenuView().getWidth()){
+            mChecker.x = -getMenuView().getWidth();
         }
         return mChecker;
     }
 
     @Override
-    public boolean isClickOnContentView(int contentViewWidth, float x) {
-        return x < (contentViewWidth - getMenuView().getWidth());
+    public boolean isClickOnContentView(View contentView, float x) {
+        return x > getMenuView().getWidth();
     }
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
+import com.tubb.smrv.demo.normal.NormalMainActivity;
 import com.tubb.smrv.demo.normal.SimpleActivity;
 import com.tubb.smrv.demo.rv.RvMainActivity;
 
@@ -22,7 +23,7 @@ public class MainActivity extends Activity {
 
     public void onClick(View v){
         if (v.getId() == R.id.button1) {
-            startActivity(new Intent(this, SimpleActivity.class));
+            startActivity(new Intent(this, NormalMainActivity.class));
         } else if(v.getId() == R.id.button2) {
             startActivity(new Intent(this, RvMainActivity.class));
         }

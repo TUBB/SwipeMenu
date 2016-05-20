@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.tubb.smrv.SwipeMenuLayout;
+import com.tubb.smrv.SwipeHorizontalMenuLayout;
 import com.tubb.smrv.demo.AbstractRvActivity;
 import com.tubb.smrv.demo.R;
 import com.tubb.smrv.demo.User;
@@ -95,7 +95,7 @@ public class SimpleRvActivity extends AbstractRvActivity {
         View btOpen;
         View btDelete;
         View btLeft;
-        SwipeMenuLayout sml;
+        SwipeHorizontalMenuLayout sml;
         public SimpleRvViewHolder(View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
@@ -104,7 +104,7 @@ public class SimpleRvActivity extends AbstractRvActivity {
             btOpen = itemView.findViewById(R.id.btOpen);
             btDelete = itemView.findViewById(R.id.btDelete);
             btLeft = itemView.findViewById(R.id.btLeft);
-            sml = (SwipeMenuLayout) itemView.findViewById(R.id.sml);
+            sml = (SwipeHorizontalMenuLayout) itemView.findViewById(R.id.sml);
         }
     }
 

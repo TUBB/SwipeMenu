@@ -14,7 +14,7 @@
             android:id="@+id/btLeftOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Left Open"
+            android:text="Top Open"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"/>
 
@@ -22,12 +22,11 @@
             android:id="@+id/btLeftClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Left Close"
+            android:text="Top Close"
             android:layout_toRightOf="@+id/btLeftOpen"
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,7 +37,7 @@
             android:id="@+id/btRightClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Right Close"
+            android:text="Bottom Close"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"/>
 
@@ -46,68 +45,77 @@
             android:id="@+id/btRightOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Right Open"
+            android:text="Bottom Open"
             android:layout_toLeftOf="@+id/btRightClose"
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 
-    <com.tubb.smrv.SwipeHorizontalMenuLayout
+    <com.tubb.smrv.SwipeVerticalMenuLayout
         android:id="@+id/sml"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        >
+        sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
+
+        <LinearLayout
+            android:id="@id/smMenuViewTop"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@android:color/holo_green_light"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="top"
+                android:textColor="@color/white"
+                android:layout_gravity="top"/>
+
+        </LinearLayout>
 
         <RelativeLayout
             android:id="@id/smContentView"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="match_parent"
             android:background="@color/red">
 
             <Button
                 android:id="@+id/btLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Left"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"/>
+                android:text="Top"
+                android:layout_centerHorizontal="true"
+                />
 
             <Button
                 android:id="@+id/btRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Right"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"/>
+                android:text="Bottom"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
 
         </RelativeLayout>
 
         <LinearLayout
-            android:id="@id/smMenuViewLeft"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:id="@id/smMenuViewBottom"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
             android:orientation="horizontal"
-            android:clickable="true">
-            <View
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/holo_blue_light"/>
+            android:clickable="true"
+            android:background="@android:color/holo_blue_light"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="bottom"
+                android:textColor="@color/white"
+                android:layout_gravity="bottom"/>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@id/smMenuViewRight"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:clickable="true">
-            <View
-                android:layout_width="200dp"
-                android:layout_height="match_parent"
-                android:background="@android:color/holo_blue_light"/>
-
-        </LinearLayout>
-    </com.tubb.smrv.SwipeHorizontalMenuLayout>
+    </com.tubb.smrv.SwipeVerticalMenuLayout>
 
 </LinearLayout>
