@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.OverScroller;
 import android.widget.Toast;
 
+import com.tubb.smrv.SwipeMenuLayout;
 import com.tubb.smrv.listener.SwipeFractionListener;
 import com.tubb.smrv.listener.SwipeSwitchListener;
 import com.tubb.smrv.SwipeHorizontalMenuLayout;
@@ -86,22 +87,22 @@ public class SimpleActivity extends Activity {
         });
         sml.setSwipeListener(new SwipeSwitchListener() {
             @Override
-            public void beginMenuClosed() {
+            public void beginMenuClosed(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "left menu closed");
             }
 
             @Override
-            public void beginMenuOpened() {
+            public void beginMenuOpened(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "left menu opened");
             }
 
             @Override
-            public void endMenuClosed() {
+            public void endMenuClosed(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "right menu closed");
             }
 
             @Override
-            public void endMenuOpened() {
+            public void endMenuOpened(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "right menu opened");
             }
 
@@ -110,19 +111,19 @@ public class SimpleActivity extends Activity {
 
 //        sml.setSwipeListener(new SimpleSwipeSwitchListener(){
 //            @Override
-//            public void beginMenuClosed() {
+//            public void beginMenuClosed(SwipeMenuLayout swipeMenuLayout) {
 //                Log.e(TAG, "left menu closed");
 //            }
 //        });
 
         sml.setSwipeFractionListener(new SwipeFractionListener() {
             @Override
-            public void beginMenuSwipeFraction(float fraction) {
+            public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
                 Log.e(TAG, "left menu swipe fraction:"+fraction);
             }
 
             @Override
-            public void endMenuSwipeFraction(float fraction) {
+            public void endMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
                 Log.e(TAG, "right menu swipe fraction:"+fraction);
             }
         });

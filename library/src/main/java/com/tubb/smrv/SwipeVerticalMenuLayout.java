@@ -12,7 +12,7 @@ import com.tubb.smrv.swiper.BottomVerticalSwiper;
 import com.tubb.smrv.swiper.Swiper;
 import com.tubb.smrv.swiper.TopVerticalSwiper;
 
-public class SwipeVerticalMenuLayout extends MenuLayout {
+public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
 
     protected int mPreScrollY;
     protected float mPreTopMenuFraction = -1;
@@ -43,11 +43,7 @@ public class SwipeVerticalMenuLayout extends MenuLayout {
             case MotionEvent.ACTION_MOVE:
                 int disX = (int) (ev.getX() - mDownX);
                 int disY = (int) (ev.getY() - mDownY);
-                if(Math.abs(disY) > mScaledTouchSlop
-                        && Math.abs(disY) > Math.abs(disX))
-                    isIntercepted = true;
-                else
-                    isIntercepted = false;
+                isIntercepted = Math.abs(disY) > mScaledTouchSlop && Math.abs(disY) > Math.abs(disX);
                 break;
             case MotionEvent.ACTION_UP:
                 isIntercepted = false;
@@ -189,27 +185,27 @@ public class SwipeVerticalMenuLayout extends MenuLayout {
             int absScrollY = Math.abs(getScrollY());
             if(mCurrentSwiper instanceof TopVerticalSwiper){
                 if(mSwipeSwitchListener != null) {
-                    if(absScrollY == 0) mSwipeSwitchListener.beginMenuClosed();
-                    else if (absScrollY == mBeginSwiper.getMenuHeight()) mSwipeSwitchListener.beginMenuOpened();
+                    if(absScrollY == 0) mSwipeSwitchListener.beginMenuClosed(this);
+                    else if (absScrollY == mBeginSwiper.getMenuHeight()) mSwipeSwitchListener.beginMenuOpened(this);
                 }
                 if(mSwipeFractionListener != null){
                     float fraction = (float) absScrollY / mBeginSwiper.getMenuHeight();
                     fraction = Float.parseFloat(mDecimalFormat.format(fraction));
                     if(fraction != mPreTopMenuFraction){
-                        mSwipeFractionListener.beginMenuSwipeFraction(fraction);
+                        mSwipeFractionListener.beginMenuSwipeFraction(this, fraction);
                     }
                     mPreTopMenuFraction = fraction;
                 }
             }else{
                 if(mSwipeSwitchListener != null) {
-                    if(absScrollY == 0) mSwipeSwitchListener.endMenuClosed();
-                    else if (absScrollY == mEndSwiper.getMenuHeight()) mSwipeSwitchListener.endMenuOpened();
+                    if(absScrollY == 0) mSwipeSwitchListener.endMenuClosed(this);
+                    else if (absScrollY == mEndSwiper.getMenuHeight()) mSwipeSwitchListener.endMenuOpened(this);
                 }
                 if(mSwipeFractionListener != null){
                     float fraction = (float) absScrollY / mEndSwiper.getMenuHeight();
                     fraction = Float.parseFloat(mDecimalFormat.format(fraction));
                     if(fraction != mPreBottomMenuFraction){
-                        mSwipeFractionListener.endMenuSwipeFraction(fraction);
+                        mSwipeFractionListener.endMenuSwipeFraction(this, fraction);
                     }
                     mPreBottomMenuFraction = fraction;
                 }

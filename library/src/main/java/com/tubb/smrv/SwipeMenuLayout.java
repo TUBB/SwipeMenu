@@ -19,10 +19,10 @@ import com.tubb.smrv.swiper.Swiper;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public abstract class MenuLayout extends FrameLayout {
+public abstract class SwipeMenuLayout extends FrameLayout {
 
     public static final String TAG = "sml";
-    public static final int DEFAULT_SCROLLER_DURATION = 300;
+    public static final int DEFAULT_SCROLLER_DURATION = 250;
     public static final float DEFAULT_AUTO_OPEN_PERCENT = 0.5f;
     protected float mAutoOpenPercent = DEFAULT_AUTO_OPEN_PERCENT;
     protected int mScrollerDuration = DEFAULT_SCROLLER_DURATION;
@@ -48,15 +48,15 @@ public abstract class MenuLayout extends FrameLayout {
     protected SwipeFractionListener mSwipeFractionListener;
     protected NumberFormat mDecimalFormat = new DecimalFormat("#.00");
 
-    public MenuLayout(Context context) {
+    public SwipeMenuLayout(Context context) {
 		this(context, null);
 	}
 
-	public MenuLayout(Context context, AttributeSet attrs) {
+	public SwipeMenuLayout(Context context, AttributeSet attrs) {
 		this(context, attrs, 0);
 	}
 
-	public MenuLayout(Context context, AttributeSet attrs, int defStyle) {
+	public SwipeMenuLayout(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		if(!isInEditMode()){
 			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);

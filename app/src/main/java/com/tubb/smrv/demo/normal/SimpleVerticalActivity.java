@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.tubb.smrv.SwipeMenuLayout;
 import com.tubb.smrv.SwipeVerticalMenuLayout;
 import com.tubb.smrv.demo.R;
 import com.tubb.smrv.listener.SwipeSwitchListener;
@@ -85,52 +86,52 @@ public class SimpleVerticalActivity extends Activity {
 
         sml.setSwipeListener(new SwipeSwitchListener() {
             @Override
-            public void beginMenuClosed() {
+            public void beginMenuClosed(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "top menu closed");
             }
 
             @Override
-            public void beginMenuOpened() {
+            public void beginMenuOpened(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "top menu opened");
             }
 
             @Override
-            public void endMenuClosed() {
+            public void endMenuClosed(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "bottom menu closed");
             }
 
             @Override
-            public void endMenuOpened() {
+            public void endMenuOpened(SwipeMenuLayout swipeMenuLayout) {
                 Log.e(TAG, "bottom menu opened");
             }
         });
 
 //        sml.setSwipeFractionListener(new SwipeFractionListener() {
 //            @Override
-//            public void beginMenuSwipeFraction(float fraction) {
+//            public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
 //                Log.e(TAG, "top menu swipe fraction:"+fraction);
 //
 //            }
 //
 //            @Override
-//            public void endMenuSwipeFraction(float fraction) {
+//            public void endMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
 //                Log.e(TAG, "bottom menu swipe fraction:"+fraction);
 //            }
 //        });
 //        sml.setSwipeFractionListener(new SwipeFractionListener() {
 //            @Override
-//            public void beginMenuSwipeFraction(float fraction) {
+//            public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
 //                Log.e(TAG, "top menu swipe fraction:"+fraction);
 //            }
 //
 //            @Override
-//            public void endMenuSwipeFraction(float fraction) {
+//            public void endMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
 //                Log.e(TAG, "bottom menu swipe fraction:"+fraction);
 //            }
 //        });
 //        sml.setSwipeFractionListener(new SimpleSwipeFractionListener(){
 //            @Override
-//            public void beginMenuSwipeFraction(float fraction) {
+//            public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
 //                Log.e(TAG, "top menu swipe fraction:"+fraction);
 //            }
 //        });

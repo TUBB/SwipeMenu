@@ -20,7 +20,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:5.0.0'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.0.1'
 }
 ```
 
@@ -141,22 +141,22 @@ We add a [SwipeSwitchListener][2] for actions like open/close
 ```java
 sml.setSwipeListener(new SwipeSwitchListener() {
     @Override
-    public void beginMenuClosed() {
+    public void beginMenuClosed(SwipeMenuLayout swipeMenuLayout) {
         Log.e(TAG, "left menu closed");
     }
 
     @Override
-    public void beginMenuOpened() {
+    public void beginMenuOpened(SwipeMenuLayout swipeMenuLayout) {
         Log.e(TAG, "left menu opened");
     }
 
     @Override
-    public void endMenuClosed() {
+    public void endMenuClosed(SwipeMenuLayout swipeMenuLayout) {
         Log.e(TAG, "right menu closed");
     }
 
     @Override
-    public void endMenuOpened() {
+    public void endMenuOpened(SwipeMenuLayout swipeMenuLayout) {
         Log.e(TAG, "right menu opened");
     }
 });
@@ -166,7 +166,7 @@ If you case a few actions, just use [SimpleSwipeSwitchListener][3]
 ```java
 sml.setSwipeListener(new SimpleSwipeSwitchListener(){
     @Override
-    public void beginMenuClosed() {
+    public void beginMenuClosed(SwipeMenuLayout swipeMenuLayout) {
         Log.e(TAG, "left menu closed");
     }
 });
@@ -176,13 +176,13 @@ We also add a [SwipeFractionListener][4] for complete fraction action
 ```java
 sml.setSwipeFractionListener(new SwipeFractionListener() {
     @Override
-    public void beginMenuSwipeFraction(float fraction) {
+    public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
         Log.e(TAG, "top menu swipe fraction:"+fraction);
 
     }
 
     @Override
-    public void endMenuSwipeFraction(float fraction) {
+    public void endMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
         Log.e(TAG, "bottom menu swipe fraction:"+fraction);
     }
 });
@@ -192,7 +192,7 @@ If you case a few actions, just use [SimpleSwipeFractionListener][5]
 ```java
 sml.setSwipeFractionListener(new SimpleSwipeFractionListener(){
     @Override
-    public void beginMenuSwipeFraction(float fraction) {
+    public void beginMenuSwipeFraction(SwipeMenuLayout swipeMenuLayout, float fraction) {
         Log.e(TAG, "top menu swipe fraction:"+fraction);
     }
 });
