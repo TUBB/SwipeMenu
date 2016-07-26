@@ -136,10 +136,12 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
                 mVelocityTracker.clear();
                 mVelocityTracker.recycle();
                 mVelocityTracker = null;
-                if(Math.abs(mDownX - ev.getX()) > mScaledTouchSlop
-                        || Math.abs(mDownY - ev.getY()) > mScaledTouchSlop
-                        || isMenuOpen()){ // ignore click listener
-                    return true;
+                if(Math.abs(dx) > mScaledTouchSlop
+                        || Math.abs(dy) > mScaledTouchSlop
+                        || isMenuOpen()){ // ignore click listener, cancel this event
+                    MotionEvent motionEvent = MotionEvent.obtain(ev);
+                    motionEvent.setAction(MotionEvent.ACTION_CANCEL);
+                    return super.onTouchEvent(motionEvent);
                 }
                 break;
 			case MotionEvent.ACTION_CANCEL:

@@ -17,7 +17,9 @@ import com.tubb.smrv.listener.SwipeSwitchListener;
 import com.tubb.smrv.swiper.Swiper;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public abstract class SwipeMenuLayout extends FrameLayout {
 
@@ -46,7 +48,7 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     protected int mScaledMaximumFlingVelocity;
     protected SwipeSwitchListener mSwipeSwitchListener;
     protected SwipeFractionListener mSwipeFractionListener;
-    protected NumberFormat mDecimalFormat = new DecimalFormat("#.00");
+    protected NumberFormat mDecimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.ENGLISH));
 
     public SwipeMenuLayout(Context context) {
 		this(context, null);

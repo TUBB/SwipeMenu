@@ -140,7 +140,9 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 if(Math.abs(mDownY - ev.getY()) > mScaledTouchSlop
                         || Math.abs(mDownX - ev.getX()) > mScaledTouchSlop
                         || isMenuOpen()){ // ignore click listener
-                    return true;
+                    MotionEvent motionEvent = MotionEvent.obtain(ev);
+                    motionEvent.setAction(MotionEvent.ACTION_CANCEL);
+                    return super.onTouchEvent(motionEvent);
                 }
                 break;
 			case MotionEvent.ACTION_CANCEL:

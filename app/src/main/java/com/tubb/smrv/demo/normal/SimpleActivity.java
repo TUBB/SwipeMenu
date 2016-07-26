@@ -1,6 +1,7 @@
 package com.tubb.smrv.demo.normal;
 
 import android.app.Activity;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +22,7 @@ public class SimpleActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple);
-
+//        RippleDrawable
         final SwipeHorizontalMenuLayout sml = (SwipeHorizontalMenuLayout) findViewById(R.id.sml);
         findViewById(R.id.btLeftOpen).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +58,14 @@ public class SimpleActivity extends Activity {
                 Toast.makeText(SimpleActivity.this, "content view onclick", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        findViewById(R.id.smContentView).setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                Toast.makeText(SimpleActivity.this, "content view long click", Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
 
         findViewById(R.id.smMenuViewLeft).setOnClickListener(new View.OnClickListener() {
             @Override

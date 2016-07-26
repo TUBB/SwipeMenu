@@ -19,8 +19,8 @@ android {
     defaultConfig{
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 22
-        versionName "5.0.2"
+        versionCode 23
+        versionName "5.1.0"
     }
 
     buildTypes {
@@ -45,7 +45,7 @@ publish {
     userOrg = 'tubb'
     groupId = 'com.tubb.smrv'
     artifactId = 'swipemenu-recyclerview'
-    publishVersion = '5.0.2'
+    publishVersion = '5.1.0'
     desc = 'A swipe menu'
     website = 'https://github.com/TUBB/SwipeMenu'
 }
