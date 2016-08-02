@@ -41,7 +41,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     }
 
     private View getSwipeMenuView(ViewGroup itemView) {
-        if(itemView instanceof SwipeHorizontalMenuLayout) return itemView;
+        if (itemView instanceof SwipeHorizontalMenuLayout) return itemView;
         List<View> unvisited = new ArrayList<>();
         unvisited.add(itemView);
         while (!unvisited.isEmpty()) {
@@ -49,10 +49,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
             if (!(child instanceof ViewGroup)) { // view
                 continue;
             }
-            if(child instanceof SwipeHorizontalMenuLayout) return child;
+            if (child instanceof SwipeHorizontalMenuLayout) return child;
             ViewGroup group = (ViewGroup) child;
             final int childCount = group.getChildCount();
-            for (int i=0; i<childCount; i++) unvisited.add(group.getChildAt(i));
+            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
         }
         return itemView;
     }
@@ -60,30 +60,32 @@ public class SwipeMenuRecyclerView extends RecyclerView {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean isIntercepted = super.onInterceptTouchEvent(ev);
+        // ignore Multi-Touch
+        if (ev.getActionIndex() != 0) return true;
         int action = ev.getAction();
-        switch (action){
+        switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = (int) ev.getX();
                 mDownY = (int) ev.getY();
                 isIntercepted = false;
                 int touchingPosition = getChildAdapterPosition(findChildViewUnder((int) ev.getX(), (int) ev.getY()));
-                if(touchingPosition != mOldTouchedPosition && mOldSwipedView != null){
+                if (touchingPosition != mOldTouchedPosition && mOldSwipedView != null) {
                     // already one swipe menu is opened, so we close it and intercept the event
-                    if(mOldSwipedView.isMenuOpen()){
+                    if (mOldSwipedView.isMenuOpen()) {
                         mOldSwipedView.smoothCloseMenu();
                         isIntercepted = true;
                     }
                 }
                 ViewHolder vh = findViewHolderForAdapterPosition(touchingPosition);
-                if(vh != null){
+                if (vh != null) {
                     View itemView = getSwipeMenuView((ViewGroup) vh.itemView);
-                    if(itemView != null && itemView instanceof SwipeHorizontalMenuLayout){
+                    if (itemView != null && itemView instanceof SwipeHorizontalMenuLayout) {
                         mOldSwipedView = (SwipeHorizontalMenuLayout) itemView;
                         mOldTouchedPosition = touchingPosition;
                     }
                 }
                 // if we intercept the event, just reset
-                if(isIntercepted){
+                if (isIntercepted) {
                     mOldSwipedView = null;
                     mOldTouchedPosition = INVALID_POSITION;
                 }
@@ -94,10 +96,10 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 int disX = (int) (mDownX - ev.getX());
                 int disY = (int) (mDownY - ev.getY());
                 // swipe
-                if(Math.abs(disX) > mViewConfig.getScaledTouchSlop())
+                if (Math.abs(disX) > mViewConfig.getScaledTouchSlop())
                     isIntercepted = false;
                 // click
-                if(Math.abs(disY) < mViewConfig.getScaledTouchSlop()
+                if (Math.abs(disY) < mViewConfig.getScaledTouchSlop()
                         && Math.abs(disX) < mViewConfig.getScaledTouchSlop())
                     isIntercepted = false;
                 break;

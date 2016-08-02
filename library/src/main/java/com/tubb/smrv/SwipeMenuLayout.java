@@ -34,7 +34,7 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     protected int mLastY;
     protected int mDownX;
     protected int mDownY;
-	protected View mContentView;
+    protected View mContentView;
     protected Swiper mBeginSwiper;
     protected Swiper mEndSwiper;
     protected Swiper mCurrentSwiper;
@@ -48,50 +48,50 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     protected int mScaledMaximumFlingVelocity;
     protected SwipeSwitchListener mSwipeSwitchListener;
     protected SwipeFractionListener mSwipeFractionListener;
-    protected NumberFormat mDecimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.ENGLISH));
+    protected NumberFormat mDecimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
 
     public SwipeMenuLayout(Context context) {
-		this(context, null);
-	}
+        this(context, null);
+    }
 
-	public SwipeMenuLayout(Context context, AttributeSet attrs) {
-		this(context, attrs, 0);
-	}
+    public SwipeMenuLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-	public SwipeMenuLayout(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-		if(!isInEditMode()){
-			TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
+    public SwipeMenuLayout(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        if (!isInEditMode()) {
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SwipeMenu, 0, defStyle);
             int interpolatorId = a.getResourceId(R.styleable.SwipeMenu_sml_scroller_interpolator, -1);
-            if(interpolatorId > 0)
+            if (interpolatorId > 0)
                 mInterpolator = AnimationUtils.loadInterpolator(getContext(), interpolatorId);
-			mAutoOpenPercent = a.getFloat(R.styleable.SwipeMenu_sml_auto_open_percent, DEFAULT_AUTO_OPEN_PERCENT);
+            mAutoOpenPercent = a.getFloat(R.styleable.SwipeMenu_sml_auto_open_percent, DEFAULT_AUTO_OPEN_PERCENT);
             mScrollerDuration = a.getInteger(R.styleable.SwipeMenu_sml_scroller_duration, DEFAULT_SCROLLER_DURATION);
             a.recycle();
-		}
+        }
         init();
-	}
+    }
 
-    public void smoothOpenBeginMenu(){
-        if(mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
+    public void smoothOpenBeginMenu() {
+        if (mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
         mCurrentSwiper = mBeginSwiper;
         smoothOpenMenu();
     }
 
-    public void smoothOpenEndMenu(){
-        if(mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
+    public void smoothOpenEndMenu() {
+        if (mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
         mCurrentSwiper = mEndSwiper;
         smoothOpenMenu();
     }
 
-    public void smoothCloseBeginMenu(){
-        if(mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
+    public void smoothCloseBeginMenu() {
+        if (mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
         mCurrentSwiper = mBeginSwiper;
         smoothCloseMenu();
     }
 
-    public void smoothCloseEndMenu(){
-        if(mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
+    public void smoothCloseEndMenu() {
+        if (mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
         mCurrentSwiper = mEndSwiper;
         smoothCloseMenu();
     }
@@ -104,9 +104,9 @@ public abstract class SwipeMenuLayout extends FrameLayout {
 
     public abstract void smoothCloseMenu(int duration);
 
-	public void smoothCloseMenu() {
+    public void smoothCloseMenu() {
         smoothCloseMenu(mScrollerDuration);
-	}
+    }
 
     public void init() {
         ViewConfiguration mViewConfig = ViewConfiguration.get(getContext());
@@ -133,11 +133,13 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     }
 
     abstract int getMoveLen(MotionEvent event);
+
     abstract int getLen();
 
     /**
      * compute finish duration
-     * @param ev up event
+     *
+     * @param ev       up event
      * @param velocity velocity
      * @return finish duration
      */
