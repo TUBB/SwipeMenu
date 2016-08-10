@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tubb.smrv.SwipeHorizontalMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <include android:id="@id/smContentView" layout="@layout/item_different_content"/>
+    <include android:id="@id/smMenuViewRight" layout="@layout/item_different_menu"/>
+
+</com.tubb.smrv.SwipeHorizontalMenuLayout>

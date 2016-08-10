@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sml="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        >
+
+        <Button
+            android:id="@+id/btLeftOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Top Open"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/btLeftClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Top Close"
+            android:layout_toRightOf="@+id/btLeftOpen"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        >
+
+        <Button
+            android:id="@+id/btRightClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bottom Close"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/btRightOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bottom Open"
+            android:layout_toLeftOf="@+id/btRightClose"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <com.tubb.smrv.SwipeVerticalMenuLayout
+        android:id="@+id/sml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        sml:sml_scroller_interpolator="@android:anim/bounce_interpolator">
+
+        <LinearLayout
+            android:id="@id/smMenuViewTop"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@android:color/holo_green_light"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="top"
+                android:textColor="@color/white"
+                android:layout_gravity="top"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@id/smContentView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/red">
+
+            <Button
+                android:id="@+id/btLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top"
+                android:layout_centerHorizontal="true"
+                />
+
+            <Button
+                android:id="@+id/btRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bottom"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@id/smMenuViewBottom"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:background="@android:color/holo_blue_light"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="bottom"
+                android:textColor="@color/white"
+                android:layout_gravity="bottom"/>
+
+        </LinearLayout>
+    </com.tubb.smrv.SwipeVerticalMenuLayout>
+
+</LinearLayout>

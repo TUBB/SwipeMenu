@@ -16,11 +16,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SimpleRvActivity" >
-        </activity>
-        <activity android:name=".DifferentMenuRvActivity" >
-        </activity>
-        <activity android:name=".GridLayoutManagerRvActivity"/>
+        <activity android:name=".normal.NormalMainActivity"/>
+        <activity android:name=".normal.SimpleActivity"/>
+        <activity android:name=".normal.SimpleVerticalActivity"/>
+        <activity android:name=".rv.RvMainActivity"/>
+        <activity android:name=".rv.SimpleRvActivity"/>
+        <activity android:name=".rv.DifferentRvActivity"/>
+        <activity android:name=".rv.GridRvActivity"/>
+        <activity android:name=".rv.StaggeredGridRvActivity"/>
+        <activity android:name=".lv.SimpleLvActivity"/>
     </application>
-
 </manifest>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">SwipeMenuRecyclerViewSample</string>
+    <string name="app_name">SwipeMenuSample</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>

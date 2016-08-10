@@ -13,34 +13,39 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 22
-        versionCode 6
-        versionName "2.0.1"
+        minSdkVersion 9
+        targetSdkVersion 23
+        versionCode 24
+        versionName "5.1.1"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:recyclerview-v7:22.2.0'
+    provided 'com.android.support:appcompat-v7:23.1.1'
+    provided 'com.android.support:recyclerview-v7:23.1.1'
 }
 
 publish {
     userOrg = 'tubb'
     groupId = 'com.tubb.smrv'
     artifactId = 'swipemenu-recyclerview'
-    publishVersion = '2.0.1'
-    desc = 'A swipe menu for RecyclerView'
-    website = 'https://github.com/TUBB/SwipeMenuRecyclerView'
+    publishVersion = '5.1.1'
+    desc = 'A swipe menu'
+    website = 'https://github.com/TUBB/SwipeMenu'
 }

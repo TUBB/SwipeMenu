@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sml="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        >
+
+        <Button
+            android:id="@+id/btLeftOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left Open"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/btLeftClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left Close"
+            android:layout_toRightOf="@+id/btLeftOpen"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        >
+
+        <Button
+            android:id="@+id/btRightClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right Close"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
+        <Button
+            android:id="@+id/btRightOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right Open"
+            android:layout_toLeftOf="@+id/btRightClose"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <com.tubb.smrv.SwipeHorizontalMenuLayout
+        android:id="@+id/sml"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        >
+
+        <RelativeLayout
+            android:id="@id/smContentView"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/red">
+
+            <Button
+                android:id="@+id/btLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Left"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"/>
+
+            <Button
+                android:id="@+id/btRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Right"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@id/smMenuViewLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:clickable="true">
+            <View
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_blue_light"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@id/smMenuViewRight"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:clickable="true">
+            <View
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/holo_blue_light"/>
+
+        </LinearLayout>
+    </com.tubb.smrv.SwipeHorizontalMenuLayout>
+
+</LinearLayout>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwipeMenu">
+        <attr name="sml_scroller_duration" format="integer" />
+        <attr name="sml_auto_open_percent" format="float"/>
+        <attr name="sml_scroller_interpolator" format="reference"/>
+    </declare-styleable>
+</resources>
