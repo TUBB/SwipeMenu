@@ -86,8 +86,6 @@ public class SimpleRvActivity extends AbstractRvActivity {
         }
     }
 
-
-
     public static class SimpleRvViewHolder extends RecyclerView.ViewHolder{
         TextView tvName;
         TextView tvSwipeEnable;

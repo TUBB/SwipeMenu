@@ -24,5 +24,6 @@
         <activity android:name=".rv.DifferentRvActivity"/>
         <activity android:name=".rv.GridRvActivity"/>
         <activity android:name=".rv.StaggeredGridRvActivity"/>
+        <activity android:name=".lv.SimpleLvActivity"/>
     </application>
 </manifest>
