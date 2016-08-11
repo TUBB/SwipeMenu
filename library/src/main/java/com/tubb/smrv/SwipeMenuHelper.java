@@ -28,7 +28,13 @@ public class SwipeMenuHelper {
         mViewConfig = ViewConfiguration.get(context);
     }
 
-    public boolean handleLvDownTouchEvent(MotionEvent ev, boolean defaultIntercepted) {
+    /**
+     * Handle touch down event, decide whether intercept or not.
+     * @param ev Touch event
+     * @param defaultIntercepted The default intercept status
+     * @return Whether intercept or not
+     */
+    public boolean handleListDownTouchEvent(MotionEvent ev, boolean defaultIntercepted) {
         boolean isIntercepted = defaultIntercepted;
         View touchingView = findChildViewUnder((int) ev.getX(), (int) ev.getY());
         int touchingPosition;
@@ -60,8 +66,10 @@ public class SwipeMenuHelper {
         return isIntercepted;
     }
 
-    public static View getSwipeMenuView(ViewGroup itemView) {
-        if (itemView instanceof SwipeHorizontalMenuLayout) return itemView;
+    public View getSwipeMenuView(ViewGroup itemView) {
+        if (itemView instanceof SwipeHorizontalMenuLayout) {
+            return itemView;
+        }
         List<View> unvisited = new ArrayList<>();
         unvisited.add(itemView);
         while (!unvisited.isEmpty()) {
@@ -69,10 +77,14 @@ public class SwipeMenuHelper {
             if (!(child instanceof ViewGroup)) { // view
                 continue;
             }
-            if (child instanceof SwipeHorizontalMenuLayout) return child;
+            if (child instanceof SwipeHorizontalMenuLayout) {
+                return child;
+            }
             ViewGroup group = (ViewGroup) child;
             final int childCount = group.getChildCount();
-            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
+            for (int i = 0; i < childCount; i++) {
+                unvisited.add(group.getChildAt(i));
+            }
         }
         return itemView;
     }

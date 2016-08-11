@@ -37,7 +37,7 @@ public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callb
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                isIntercepted = mHelper.handleLvDownTouchEvent(ev, isIntercepted);
+                isIntercepted = mHelper.handleListDownTouchEvent(ev, isIntercepted);
                 break;
         }
         return isIntercepted;
