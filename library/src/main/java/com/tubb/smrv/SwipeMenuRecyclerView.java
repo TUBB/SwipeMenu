@@ -8,18 +8,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SwipeMenuRecyclerView extends RecyclerView {
-
-    private static final int INVALID_POSITION = -1;
 
     protected ViewConfiguration mViewConfig;
     protected SwipeHorizontalMenuLayout mOldSwipedView;
-    protected int mOldTouchedPosition = INVALID_POSITION;
-    private int mDownX;
-    private int mDownY;
+    protected int mOldTouchedPosition = SwipeMenuHelper.INVALID_POSITION;
 
     public SwipeMenuRecyclerView(Context context) {
         super(context);
@@ -40,23 +33,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         mViewConfig = ViewConfiguration.get(getContext());
     }
 
-    private View getSwipeMenuView(ViewGroup itemView) {
-        if (itemView instanceof SwipeHorizontalMenuLayout) return itemView;
-        List<View> unvisited = new ArrayList<>();
-        unvisited.add(itemView);
-        while (!unvisited.isEmpty()) {
-            View child = unvisited.remove(0);
-            if (!(child instanceof ViewGroup)) { // view
-                continue;
-            }
-            if (child instanceof SwipeHorizontalMenuLayout) return child;
-            ViewGroup group = (ViewGroup) child;
-            final int childCount = group.getChildCount();
-            for (int i = 0; i < childCount; i++) unvisited.add(group.getChildAt(i));
-        }
-        return itemView;
-    }
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean isIntercepted = super.onInterceptTouchEvent(ev);
@@ -65,8 +41,6 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         int action = ev.getAction();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                mDownX = (int) ev.getX();
-                mDownY = (int) ev.getY();
                 int touchingPosition = getChildAdapterPosition(findChildViewUnder((int) ev.getX(), (int) ev.getY()));
                 if (touchingPosition != mOldTouchedPosition && mOldSwipedView != null) {
                     // already one swipe menu is opened, so we close it and intercept the event
@@ -77,7 +51,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 }
                 ViewHolder vh = findViewHolderForAdapterPosition(touchingPosition);
                 if (vh != null) {
-                    View itemView = getSwipeMenuView((ViewGroup) vh.itemView);
+                    View itemView = SwipeMenuHelper.getSwipeMenuView((ViewGroup) vh.itemView);
                     if (itemView != null && itemView instanceof SwipeHorizontalMenuLayout) {
                         mOldSwipedView = (SwipeHorizontalMenuLayout) itemView;
                         mOldTouchedPosition = touchingPosition;
@@ -86,7 +60,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
                 // if we intercept the event, just reset
                 if (isIntercepted) {
                     mOldSwipedView = null;
-                    mOldTouchedPosition = INVALID_POSITION;
+                    mOldTouchedPosition = SwipeMenuHelper.INVALID_POSITION;
                 }
                 break;
         }

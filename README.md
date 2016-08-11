@@ -5,7 +5,8 @@ A swipe menu for `horizontal/vertical`, support `left/right add top/bottom` dire
 Features
 ======== 
  
- * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (only horizontal)
+ * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (`only horizontal`)
+ * Support ListView and GridView (`only horizontal`)
  * On-off swipe ability
  * Not intercept item touch event
  * Left/Right and Top/Bottom menu support, free switch
@@ -20,7 +21,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:5.1.1'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.2.0'
 }
 ```
 

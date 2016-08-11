@@ -3,23 +3,23 @@ package com.tubb.smrv;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.ListView;
+import android.widget.GridView;
 
-public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callback{
+public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callback{
 
     protected SwipeMenuHelper mHelper;
 
-    public SwipeMenuListView(Context context) {
+    public SwipeMenuGridView(Context context) {
         super(context);
         init();
     }
 
-    public SwipeMenuListView(Context context, AttributeSet attrs) {
+    public SwipeMenuGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public SwipeMenuListView(Context context, AttributeSet attrs, int defStyle) {
+    public SwipeMenuGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
