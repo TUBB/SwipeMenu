@@ -3,6 +3,7 @@ package com.tubb.smrv;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ListView;
 
 public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callback{
@@ -42,4 +43,8 @@ public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callb
         return isIntercepted;
     }
 
+    @Override
+    public View transformTouchingView(int touchingPosition, View touchingView) {
+        return touchingView;
+    }
 }

@@ -21,7 +21,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:5.2.0'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.2.1'
 }
 ```
 

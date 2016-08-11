@@ -30,10 +30,10 @@ public class SwipeMenuHelper {
 
     public boolean handleLvDownTouchEvent(MotionEvent ev, boolean defaultIntercepted) {
         boolean isIntercepted = defaultIntercepted;
-        View touchView = findChildViewUnder((int) ev.getX(), (int) ev.getY());
+        View touchingView = findChildViewUnder((int) ev.getX(), (int) ev.getY());
         int touchingPosition;
-        if (touchView != null) {
-            touchingPosition = mCallback.getPositionForView(touchView);
+        if (touchingView != null) {
+            touchingPosition = mCallback.getPositionForView(touchingView);
         } else {
             touchingPosition = INVALID_POSITION;
         }
@@ -44,8 +44,9 @@ public class SwipeMenuHelper {
                 isIntercepted = true;
             }
         }
-        if (touchView != null) {
-            View itemView = getSwipeMenuView((ViewGroup) touchView);
+        touchingView = mCallback.transformTouchingView(touchingPosition, touchingView);
+        if (touchingView != null) {
+            View itemView = getSwipeMenuView((ViewGroup) touchingView);
             if (itemView != null && itemView instanceof SwipeHorizontalMenuLayout) {
                 mOldSwipedView = (SwipeHorizontalMenuLayout) itemView;
                 mOldTouchedPosition = touchingPosition;
@@ -103,6 +104,7 @@ public class SwipeMenuHelper {
         int getPositionForView(View view);
         int getChildCount();
         View getChildAt(int index);
+        View transformTouchingView(int touchingPosition, View touchingView);
     }
 
 }
