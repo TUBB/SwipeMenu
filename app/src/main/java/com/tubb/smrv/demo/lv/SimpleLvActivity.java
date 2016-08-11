@@ -25,7 +25,7 @@ import java.util.Random;
  * Created by tubingbing on 16/8/10.
  */
 
-public class SimpleListViewActivity extends Activity{
+public class SimpleLvActivity extends Activity{
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class SimpleListViewActivity extends Activity{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Toast.makeText(SimpleListViewActivity.this, "Refresh success", Toast.LENGTH_LONG).show();
+                Toast.makeText(SimpleLvActivity.this, "Refresh success", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.tubb.smrv.demo.lv.SimpleGvActivity;
-import com.tubb.smrv.demo.lv.SimpleListViewActivity;
+import com.tubb.smrv.demo.lv.SimpleLvActivity;
 import com.tubb.smrv.demo.normal.NormalMainActivity;
 import com.tubb.smrv.demo.rv.RvMainActivity;
 
@@ -24,7 +24,7 @@ public class MainActivity extends Activity {
         } else if(v.getId() == R.id.button2) {
             startActivity(new Intent(this, RvMainActivity.class));
         } else if (v.getId() == R.id.button3) {
-            startActivity(new Intent(this, SimpleListViewActivity.class));
+            startActivity(new Intent(this, SimpleLvActivity.class));
         } else if (v.getId() == R.id.button4) {
             startActivity(new Intent(this, SimpleGvActivity.class));
         }
