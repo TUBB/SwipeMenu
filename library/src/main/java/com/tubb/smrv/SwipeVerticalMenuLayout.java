@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewParent;
 
 import com.tubb.smrv.swiper.BottomVerticalSwiper;
 import com.tubb.smrv.swiper.Swiper;
@@ -83,6 +84,10 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 if (!mDragging
                         && Math.abs(disY) > mScaledTouchSlop
                         && Math.abs(disY) > Math.abs(disX)) {
+                    ViewParent parent = getParent();
+                    if(parent!= null){
+                        parent.requestDisallowInterceptTouchEvent(true);
+                    }
                     mDragging = true;
                 }
                 if (mDragging) {
@@ -106,6 +111,10 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                ViewParent parent = getParent();
+                if(parent!= null){
+                    parent.requestDisallowInterceptTouchEvent(false);
+                }
                 dx = (int) (mDownX - ev.getX());
                 dy = (int) (mDownY - ev.getY());
                 mDragging = false;
