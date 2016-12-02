@@ -7,6 +7,7 @@ Features
  
  * Support LinearLayoutManager、GridLayoutManager and StaggeredGridLayoutManager for RecyclerView (`only horizontal`)
  * Support ListView and GridView (`only horizontal`)
+ * Support ScrollView (`only horizontal` and the `[SwipeHorizontal/SwipeVertical]MenuLayout` must be the direct child of ScrollView's direct child )
  * On-off swipe ability
  * Not intercept item touch event
  * Left/Right and Top/Bottom menu support, free switch
@@ -21,7 +22,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:5.3.0'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.0'
 }
 ```
 

@@ -7,6 +7,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data android:name="UMENG_CHANNEL" android:value="00"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
@@ -26,5 +27,6 @@
         <activity android:name=".rv.StaggeredGridRvActivity"/>
         <activity android:name=".lv.SimpleLvActivity"/>
         <activity android:name=".lv.SimpleGvActivity"/>
+        <activity android:name=".sv.ScrollViewActivity"/>
     </application>
 </manifest>

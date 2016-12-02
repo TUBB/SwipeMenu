@@ -97,9 +97,9 @@ public class SwipeMenuHelper {
      * @return The child view under (x, y) or null if no matching child is found
      */
     public View findChildViewUnder(float x, float y) {
-        final int count = mCallback.getChildCount();
+        final int count = mCallback.getRealChildCount();
         for (int i = count - 1; i >= 0; i--) {
-            final View child = mCallback.getChildAt(i);
+            final View child = mCallback.getRealChildAt(i);
             final float translationX = ViewCompat.getTranslationX(child);
             final float translationY = ViewCompat.getTranslationY(child);
             if (x >= child.getLeft() + translationX &&
@@ -114,8 +114,8 @@ public class SwipeMenuHelper {
 
     public interface Callback {
         int getPositionForView(View view);
-        int getChildCount();
-        View getChildAt(int index);
+        int getRealChildCount();
+        View getRealChildAt(int index);
         View transformTouchingView(int touchingPosition, View touchingView);
     }
 

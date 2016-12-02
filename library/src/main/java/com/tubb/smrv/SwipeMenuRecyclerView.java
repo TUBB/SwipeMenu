@@ -48,6 +48,16 @@ public class SwipeMenuRecyclerView extends RecyclerView implements SwipeMenuHelp
     }
 
     @Override
+    public int getRealChildCount() {
+        return getChildCount();
+    }
+
+    @Override
+    public View getRealChildAt(int index) {
+        return getChildAt(index);
+    }
+
+    @Override
     public View transformTouchingView(int touchingPosition, View touchingView) {
         ViewHolder vh = findViewHolderForAdapterPosition(touchingPosition);
         if (vh != null) {

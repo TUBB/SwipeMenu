@@ -59,7 +59,7 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
             case MotionEvent.ACTION_CANCEL:
                 isIntercepted = false;
                 if (!mScroller.isFinished())
-                    mScroller.abortAnimation();
+                    mScroller.forceFinished(false);
                 break;
         }
         return isIntercepted;
@@ -111,7 +111,6 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-
                 ViewParent parent = getParent();
                 if(parent!= null){
                     parent.requestDisallowInterceptTouchEvent(false);
@@ -157,7 +156,7 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
             case MotionEvent.ACTION_CANCEL:
                 mDragging = false;
                 if (!mScroller.isFinished()) {
-                    mScroller.abortAnimation();
+                    mScroller.forceFinished(false);
                 } else {
                     dx = (int) (mDownX - ev.getX());
                     dy = (int) (mDownY - ev.getY());

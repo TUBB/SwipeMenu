@@ -59,7 +59,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
             case MotionEvent.ACTION_CANCEL:
                 isIntercepted = false;
                 if (!mScroller.isFinished())
-                    mScroller.abortAnimation();
+                    mScroller.forceFinished(false);
                 break;
         }
         return isIntercepted;
@@ -124,7 +124,6 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 if (velocity > mScaledMinimumFlingVelocity) {
                     if (mCurrentSwiper != null) {
                         int duration = getSwipeDuration(ev, velocity);
-                        Log.e(TAG, "velocityY:" + velocityY);
                         if (mCurrentSwiper instanceof BottomVerticalSwiper) {
                             if (velocityY < 0) { // just open
                                 smoothOpenMenu(duration);
@@ -157,7 +156,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
             case MotionEvent.ACTION_CANCEL:
                 mDragging = false;
                 if (!mScroller.isFinished()) {
-                    mScroller.abortAnimation();
+                    mScroller.forceFinished(false);
                 } else {
                     dx = (int) (mDownX - ev.getX());
                     dy = (int) (mDownY - ev.getY());
@@ -172,11 +171,15 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
         if (mCurrentSwiper != null) {
             if (Math.abs(getScrollY()) >= (mCurrentSwiper.getMenuView().getHeight() * mAutoOpenPercent)) { // auto open
                 if (Math.abs(dx) > mScaledTouchSlop || Math.abs(dy) > mScaledTouchSlop) { // swipe up
-                    if (isMenuOpenNotEqual()) smoothCloseMenu();
-                    else smoothOpenMenu();
+                    if (isMenuOpenNotEqual())
+                        smoothCloseMenu();
+                    else
+                        smoothOpenMenu();
                 } else { // normal up
-                    if (isMenuOpen()) smoothCloseMenu();
-                    else smoothOpenMenu();
+                    if (isMenuOpen())
+                        smoothCloseMenu();
+                    else
+                        smoothOpenMenu();
                 }
             } else { // auto close
                 smoothCloseMenu();

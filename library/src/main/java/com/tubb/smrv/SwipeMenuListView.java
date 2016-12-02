@@ -44,6 +44,16 @@ public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callb
     }
 
     @Override
+    public int getRealChildCount() {
+        return getChildCount();
+    }
+
+    @Override
+    public View getRealChildAt(int index) {
+        return getChildAt(index);
+    }
+
+    @Override
     public View transformTouchingView(int touchingPosition, View touchingView) {
         return touchingView;
     }
