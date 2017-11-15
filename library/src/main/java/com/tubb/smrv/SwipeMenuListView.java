@@ -67,4 +67,9 @@ public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callb
         mHelper.reset();
         super.setAdapter(adapter);
     }
+
+    @Override
+    public void reset() {
+        mHelper.reset();
+    }
 }

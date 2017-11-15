@@ -133,6 +133,7 @@ public class SwipeMenuHelper {
         int getRealChildCount();
         View getRealChildAt(int index);
         View transformTouchingView(int touchingPosition, View touchingView);
+        void reset();
     }
 
 }

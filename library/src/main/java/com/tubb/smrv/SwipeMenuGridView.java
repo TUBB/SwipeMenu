@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
-public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callback{
+public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callback {
 
     protected SwipeMenuHelper mHelper;
 
@@ -66,5 +66,10 @@ public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callb
     public void setAdapter(ListAdapter adapter) {
         mHelper.reset();
         super.setAdapter(adapter);
+    }
+
+    @Override
+    public void reset() {
+        mHelper.reset();
     }
 }
