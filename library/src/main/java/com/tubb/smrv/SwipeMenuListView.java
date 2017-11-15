@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callback{
@@ -59,5 +60,11 @@ public class SwipeMenuListView extends ListView implements SwipeMenuHelper.Callb
     @Override
     public View transformTouchingView(int touchingPosition, View touchingView) {
         return touchingView;
+    }
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        mHelper.reset();
+        super.setAdapter(adapter);
     }
 }

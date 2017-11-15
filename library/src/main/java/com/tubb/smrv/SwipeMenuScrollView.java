@@ -105,6 +105,10 @@ public class SwipeMenuScrollView extends ScrollView implements SwipeMenuHelper.C
         }
     }
 
+    public void reset() {
+        mHelper.reset();
+    }
+
     protected class Helper extends SwipeMenuHelper {
 
         protected Helper(Context context, Callback callback) {

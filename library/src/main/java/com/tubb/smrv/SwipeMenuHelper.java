@@ -123,6 +123,11 @@ public class SwipeMenuHelper {
         return null;
     }
 
+    public void reset() {
+        mOldTouchedPosition = INVALID_POSITION;
+        if (mOldSwipedView != null) mOldSwipedView.smoothCloseMenu();
+    }
+
     public interface Callback {
         int getPositionForView(View view);
         int getRealChildCount();

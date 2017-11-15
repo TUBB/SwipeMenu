@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 
 public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callback{
 
@@ -59,5 +60,11 @@ public class SwipeMenuGridView extends GridView implements SwipeMenuHelper.Callb
     @Override
     public View transformTouchingView(int touchingPosition, View touchingView) {
         return touchingView;
+    }
+
+    @Override
+    public void setAdapter(ListAdapter adapter) {
+        mHelper.reset();
+        super.setAdapter(adapter);
     }
 }

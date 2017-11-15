@@ -68,4 +68,10 @@ public class SwipeMenuRecyclerView extends RecyclerView implements SwipeMenuHelp
         }
         return touchingView;
     }
+
+    @Override
+    public void setAdapter(Adapter adapter) {
+        mHelper.reset();
+        super.setAdapter(adapter);
+    }
 }
