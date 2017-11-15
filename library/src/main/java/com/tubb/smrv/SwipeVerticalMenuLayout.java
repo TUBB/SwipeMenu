@@ -271,13 +271,17 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
     }
 
     public void smoothOpenMenu(int duration) {
-        mCurrentSwiper.autoOpenMenu(mScroller, getScrollY(), duration);
-        invalidate();
+        if (mCurrentSwiper != null) {
+            mCurrentSwiper.autoOpenMenu(mScroller, getScrollY(), duration);
+            invalidate();
+        }
     }
 
     public void smoothCloseMenu(int duration) {
-        mCurrentSwiper.autoCloseMenu(mScroller, getScrollY(), duration);
-        invalidate();
+        if (mCurrentSwiper != null) {
+            mCurrentSwiper.autoCloseMenu(mScroller, getScrollY(), duration);
+            invalidate();
+        }
     }
 
     @Override

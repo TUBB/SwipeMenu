@@ -267,18 +267,21 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
     }
 
     public void smoothOpenMenu(int duration) {
-        mCurrentSwiper.autoOpenMenu(mScroller, getScrollX(), duration);
-        invalidate();
+        if (mCurrentSwiper != null) {
+            mCurrentSwiper.autoOpenMenu(mScroller, getScrollX(), duration);
+            invalidate();
+        }
     }
 
     public void smoothCloseMenu(int duration) {
-        mCurrentSwiper.autoCloseMenu(mScroller, getScrollX(), duration);
-        invalidate();
+        if (mCurrentSwiper != null) {
+            mCurrentSwiper.autoCloseMenu(mScroller, getScrollX(), duration);
+            invalidate();
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
         int parentViewWidth = ViewCompat.getMeasuredWidthAndState(this);
         int contentViewWidth = ViewCompat.getMeasuredWidthAndState(mContentView);
         int contentViewHeight = ViewCompat.getMeasuredHeightAndState(mContentView);
