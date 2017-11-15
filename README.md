@@ -22,7 +22,7 @@ Usage
 Add to dependencies
 ```
 dependencies {
-    compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.2'
+    compile 'com.tubb.smrv:swipemenu-recyclerview:5.4.3'
 }
 ```
 
