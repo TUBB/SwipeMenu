@@ -1,6 +1,7 @@
 package com.tubb.smrv;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +29,15 @@ public class SwipeMenuHelper {
         mViewConfig = ViewConfiguration.get(context);
     }
 
+    public boolean handleDispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getActionMasked();
+        switch (action) {
+            case MotionEvent.ACTION_POINTER_DOWN:
+                return true;
+        }
+        return false;
+    }
+
     /**
      * Handle touch down event, decide whether intercept or not.
      * @param ev Touch event
@@ -52,7 +62,7 @@ public class SwipeMenuHelper {
         }
         touchingView = mCallback.transformTouchingView(touchingPosition, touchingView);
         if (touchingView != null) {
-            View itemView = getSwipeMenuView((ViewGroup) touchingView);
+            View itemView = getSwipeMenuView(touchingView);
             if (itemView != null && itemView instanceof SwipeHorizontalMenuLayout) {
                 mOldSwipedView = (SwipeHorizontalMenuLayout) itemView;
                 mOldTouchedPosition = touchingPosition;
@@ -66,7 +76,7 @@ public class SwipeMenuHelper {
         return isIntercepted;
     }
 
-    public View getSwipeMenuView(ViewGroup itemView) {
+    public View getSwipeMenuView(View itemView) {
         if (itemView instanceof SwipeHorizontalMenuLayout) {
             return itemView;
         }
@@ -96,6 +106,7 @@ public class SwipeMenuHelper {
      * @param y Vertical position in pixels to search
      * @return The child view under (x, y) or null if no matching child is found
      */
+    @Nullable
     public View findChildViewUnder(float x, float y) {
         final int count = mCallback.getRealChildCount();
         for (int i = count - 1; i >= 0; i--) {

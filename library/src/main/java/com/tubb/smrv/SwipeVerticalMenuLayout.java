@@ -3,7 +3,6 @@ package com.tubb.smrv;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -34,7 +33,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean isIntercepted = super.onInterceptTouchEvent(ev);
-        int action = ev.getAction();
+        int action = ev.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = mLastX = (int) ev.getX();
@@ -71,7 +70,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
         mVelocityTracker.addMovement(ev);
         int dx;
         int dy;
-        int action = ev.getAction();
+        int action = ev.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mLastX = (int) ev.getX();

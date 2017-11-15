@@ -59,13 +59,13 @@ public class SimpleActivity extends Activity {
             }
         });
 
-//        findViewById(R.id.smContentView).setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Toast.makeText(SimpleActivity.this, "content view long click", Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//        });
+        findViewById(R.id.smContentView).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(SimpleActivity.this, "content view long click", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
 
         findViewById(R.id.smMenuViewLeft).setOnClickListener(new View.OnClickListener() {
             @Override

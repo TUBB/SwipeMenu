@@ -30,14 +30,17 @@ public class SwipeMenuRecyclerView extends RecyclerView implements SwipeMenuHelp
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean isIntercepted = super.onInterceptTouchEvent(ev);
-        // ignore Multi-Touch
-        if (ev.getActionIndex() != 0) return true;
-        int action = ev.getAction();
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return mHelper.handleDispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        boolean isIntercepted = super.onInterceptTouchEvent(event);
+        int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
-                isIntercepted = mHelper.handleListDownTouchEvent(ev, isIntercepted);
+                isIntercepted = mHelper.handleListDownTouchEvent(event, isIntercepted);
                 break;
         }
         return isIntercepted;

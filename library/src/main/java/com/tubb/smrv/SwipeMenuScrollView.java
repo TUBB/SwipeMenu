@@ -1,10 +1,8 @@
 package com.tubb.smrv;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,11 +55,14 @@ public class SwipeMenuScrollView extends ScrollView implements SwipeMenuHelper.C
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return mHelper.handleDispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean isIntercepted = super.onInterceptTouchEvent(ev);
-        // ignore Multi-Touch
-        if (ev.getActionIndex() != 0) return true;
-        int action = ev.getAction();
+        int action = ev.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 isIntercepted = mHelper.handleListDownTouchEvent(ev, isIntercepted);
@@ -110,6 +111,7 @@ public class SwipeMenuScrollView extends ScrollView implements SwipeMenuHelper.C
             super(context, callback);
         }
 
+        @Nullable
         @Override
         public View findChildViewUnder(float x, float y) {
             if (menuLayoutList != null) {

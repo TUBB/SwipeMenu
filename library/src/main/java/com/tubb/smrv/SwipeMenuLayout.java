@@ -73,25 +73,25 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     }
 
     public void smoothOpenBeginMenu() {
-        if (mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
+        if (mBeginSwiper == null) throw new IllegalArgumentException("No begin menu!");
         mCurrentSwiper = mBeginSwiper;
         smoothOpenMenu();
     }
 
     public void smoothOpenEndMenu() {
-        if (mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
+        if (mEndSwiper == null) throw new IllegalArgumentException("No end menu!");
         mCurrentSwiper = mEndSwiper;
         smoothOpenMenu();
     }
 
     public void smoothCloseBeginMenu() {
-        if (mBeginSwiper == null) throw new IllegalArgumentException("Not have begin menu!");
+        if (mBeginSwiper == null) throw new IllegalArgumentException("No begin menu!");
         mCurrentSwiper = mBeginSwiper;
         smoothCloseMenu();
     }
 
     public void smoothCloseEndMenu() {
-        if (mEndSwiper == null) throw new IllegalArgumentException("Not have end menu!");
+        if (mEndSwiper == null) throw new IllegalArgumentException("No end menu!");
         mCurrentSwiper = mEndSwiper;
         smoothCloseMenu();
     }
