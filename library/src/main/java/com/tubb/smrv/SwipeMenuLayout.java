@@ -108,6 +108,12 @@ public abstract class SwipeMenuLayout extends FrameLayout {
         smoothCloseMenu(mScrollerDuration);
     }
 
+    /**
+     * Not in the place, the swipe menu is swiping
+     * @return int the place or not
+     */
+    public abstract boolean isNotInPlace();
+
     public void init() {
         ViewConfiguration mViewConfig = ViewConfiguration.get(getContext());
         mScaledTouchSlop = mViewConfig.getScaledTouchSlop();

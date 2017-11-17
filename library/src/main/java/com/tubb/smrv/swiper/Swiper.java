@@ -28,6 +28,10 @@ public abstract class Swiper {
     public abstract Checker checkXY(int x, int y);
     public abstract boolean isClickOnContentView(View contentView, float clickPoint);
 
+    public boolean isNotInPlace(final int scrollDis) {
+        return scrollDis != 0;
+    }
+
     public int getDirection() {
         return direction;
     }

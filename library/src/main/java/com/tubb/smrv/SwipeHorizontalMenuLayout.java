@@ -266,6 +266,12 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
                 || (mEndSwiper != null && mEndSwiper.isMenuOpenNotEqual(getScrollX()));
     }
 
+    @Override
+    public boolean isNotInPlace() {
+        return (mBeginSwiper != null && mBeginSwiper.isNotInPlace(getScrollX()))
+                || (mEndSwiper != null && mEndSwiper.isNotInPlace(getScrollX()));
+    }
+
     public void smoothOpenMenu(int duration) {
         if (mCurrentSwiper != null) {
             mCurrentSwiper.autoOpenMenu(mScroller, getScrollX(), duration);

@@ -54,8 +54,8 @@ public class SwipeMenuHelper {
             touchingPosition = INVALID_POSITION;
         }
         if (touchingPosition != mOldTouchedPosition && mOldSwipedView != null) {
-            // already one swipe menu is opened, so we close it and intercept the event
-            if (mOldSwipedView.isMenuOpen()) {
+            // already one swipe menu is swiping, so we close it and intercept the event
+            if (mOldSwipedView.isNotInPlace()) {
                 mOldSwipedView.smoothCloseMenu();
                 isIntercepted = true;
             }

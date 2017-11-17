@@ -270,6 +270,12 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 || (mEndSwiper != null && mEndSwiper.isMenuOpenNotEqual(getScrollY()));
     }
 
+    @Override
+    public boolean isNotInPlace() {
+        return (mBeginSwiper != null && mBeginSwiper.isNotInPlace(getScrollY()))
+                || (mEndSwiper != null && mEndSwiper.isNotInPlace(getScrollY()));
+    }
+
     public void smoothOpenMenu(int duration) {
         if (mCurrentSwiper != null) {
             mCurrentSwiper.autoOpenMenu(mScroller, getScrollY(), duration);
