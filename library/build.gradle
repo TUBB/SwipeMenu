@@ -8,19 +8,19 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.novoda:bintray-release:0.5.0'
+        classpath 'com.novoda:bintray-release:0.8.0'
     }
 }
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 25
-        versionCode 32
-        versionName "5.4.4"
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
     }
 
     buildTypes {
@@ -37,15 +37,15 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'com.android.support:appcompat-v7:25.1.1'
-    provided 'com.android.support:recyclerview-v7:25.1.1'
+    implementation 'com.android.support:appcompat-v7:'+project.supportVersion
+    implementation 'com.android.support:recyclerview-v7:'+project.supportVersion
 }
 
 publish {
     userOrg = 'tubb'
     groupId = 'com.tubb.smrv'
     artifactId = 'swipemenu-recyclerview'
-    publishVersion = '5.4.4'
-    desc = 'A swipe menu'
+    publishVersion = project.versionName
+    desc = 'A swipe menu for recyclerview'
     website = 'https://github.com/TUBB/SwipeMenu'
 }
