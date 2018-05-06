@@ -23,7 +23,6 @@ import java.util.Locale;
 
 public abstract class SwipeMenuLayout extends FrameLayout {
 
-    public static final String TAG = "sml";
     public static final int DEFAULT_SCROLLER_DURATION = 250;
     public static final float DEFAULT_AUTO_OPEN_PERCENT = 0.5f;
     protected float mAutoOpenPercent = DEFAULT_AUTO_OPEN_PERCENT;
