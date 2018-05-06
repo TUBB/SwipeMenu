@@ -1,5 +1,6 @@
 package com.tubb.smrv;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -46,14 +47,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 isIntercepted = Math.abs(disY) > mScaledTouchSlop && Math.abs(disY) > Math.abs(disX);
                 break;
             case MotionEvent.ACTION_UP:
-                isIntercepted = false;
-                // menu view opened and click on content view,
-                // we just close the menu view and intercept the up event
-                if (isMenuOpen()
-                        && mCurrentSwiper.isClickOnContentView(this, ev.getY())) {
-                    smoothCloseMenu();
-                    isIntercepted = true;
-                }
+                isIntercepted = handleActionUpOfIntercept(ev.getY());
                 break;
             case MotionEvent.ACTION_CANCEL:
                 isIntercepted = false;
@@ -64,6 +58,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
         return isIntercepted;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
@@ -124,15 +119,15 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                     if (mCurrentSwiper != null) {
                         int duration = getSwipeDuration(ev, velocity);
                         if (mCurrentSwiper instanceof BottomVerticalSwiper) {
-                            if (velocityY < 0) { // just open
+                            if (velocityY < 0) {
                                 smoothOpenMenu(duration);
-                            } else { // just close
+                            } else {
                                 smoothCloseMenu(duration);
                             }
                         } else {
-                            if (velocityY > 0) { // just open
+                            if (velocityY > 0) {
                                 smoothOpenMenu(duration);
-                            } else { // just close
+                            } else {
                                 smoothCloseMenu(duration);
                             }
                         }
@@ -146,7 +141,8 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 mVelocityTracker = null;
                 if (Math.abs(mDownY - ev.getY()) > mScaledTouchSlop
                         || Math.abs(mDownX - ev.getX()) > mScaledTouchSlop
-                        || isMenuOpen()) { // ignore click listener
+                        || isMenuOpened()
+                        || isSwiping()) { // ignore click listener
                     MotionEvent motionEvent = MotionEvent.obtain(ev);
                     motionEvent.setAction(MotionEvent.ACTION_CANCEL);
                     return super.onTouchEvent(motionEvent);
@@ -168,14 +164,14 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
 
     private void judgeOpenClose(int dx, int dy) {
         if (mCurrentSwiper != null) {
-            if (Math.abs(getScrollY()) >= (mCurrentSwiper.getMenuView().getHeight() * mAutoOpenPercent)) { // auto open
-                if (Math.abs(dx) > mScaledTouchSlop || Math.abs(dy) > mScaledTouchSlop) { // swipe up
-                    if (isMenuOpenNotEqual())
+            if (Math.abs(getScrollY()) >= (mCurrentSwiper.getMenuView().getHeight() * mAutoOpenPercent)) {
+                if (Math.abs(dx) > mScaledTouchSlop || Math.abs(dy) > mScaledTouchSlop) {
+                    if (isMenuOpenedNotEqual())
                         smoothCloseMenu();
                     else
                         smoothOpenMenu();
                 } else { // normal up
-                    if (isMenuOpen())
+                    if (isMenuOpened())
                         smoothCloseMenu();
                     else
                         smoothOpenMenu();
@@ -260,14 +256,22 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
         if (menuViewBottom != null) mEndSwiper = new BottomVerticalSwiper(menuViewBottom);
     }
 
-    public boolean isMenuOpen() {
-        return (mBeginSwiper != null && mBeginSwiper.isMenuOpen(getScrollY()))
-                || (mEndSwiper != null && mEndSwiper.isMenuOpen(getScrollY()));
+    @Override
+    protected boolean isMenuOpened() {
+        return (mBeginSwiper != null && mBeginSwiper.isMenuOpened(getScrollY()))
+                || (mEndSwiper != null && mEndSwiper.isMenuOpened(getScrollY()));
     }
 
-    public boolean isMenuOpenNotEqual() {
-        return (mBeginSwiper != null && mBeginSwiper.isMenuOpenNotEqual(getScrollY()))
-                || (mEndSwiper != null && mEndSwiper.isMenuOpenNotEqual(getScrollY()));
+    @Override
+    protected boolean isSwiping() {
+        return (mBeginSwiper != null && mBeginSwiper.isSwiping(getScrollY()))
+                || (mEndSwiper != null && mEndSwiper.isSwiping(getScrollY()));
+    }
+
+    @Override
+    protected boolean isMenuOpenedNotEqual() {
+        return (mBeginSwiper != null && mBeginSwiper.isMenuOpenedNotEqual(getScrollY()))
+                || (mEndSwiper != null && mEndSwiper.isMenuOpenedNotEqual(getScrollY()));
     }
 
     @Override
@@ -276,6 +280,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 || (mEndSwiper != null && mEndSwiper.isNotInPlace(getScrollY()));
     }
 
+    @Override
     public void smoothOpenMenu(int duration) {
         if (mCurrentSwiper != null) {
             mCurrentSwiper.autoOpenMenu(mScroller, getScrollY(), duration);
@@ -283,6 +288,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
         }
     }
 
+    @Override
     public void smoothCloseMenu(int duration) {
         if (mCurrentSwiper != null) {
             mCurrentSwiper.autoCloseMenu(mScroller, getScrollY(), duration);
@@ -293,9 +299,9 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
-        int parentViewHeight = ViewCompat.getMeasuredHeightAndState(this);
-        int contentViewWidth = ViewCompat.getMeasuredWidthAndState(mContentView);
-        int contentViewHeight = ViewCompat.getMeasuredHeightAndState(mContentView);
+        int parentViewHeight = getMeasuredHeightAndState();
+        int contentViewWidth = mContentView.getMeasuredWidthAndState();
+        int contentViewHeight = mContentView.getMeasuredHeightAndState();
         LayoutParams lp = (LayoutParams) mContentView.getLayoutParams();
         int lGap = getPaddingLeft() + lp.leftMargin;
         int tGap = getPaddingTop() + lp.topMargin;
@@ -305,8 +311,8 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 tGap + contentViewHeight);
 
         if (mEndSwiper != null) {
-            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mEndSwiper.getMenuView());
-            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mEndSwiper.getMenuView());
+            int menuViewWidth = mEndSwiper.getMenuView().getMeasuredWidthAndState();
+            int menuViewHeight = mEndSwiper.getMenuView().getMeasuredHeightAndState();
             lp = (LayoutParams) mEndSwiper.getMenuView().getLayoutParams();
             lGap = getPaddingLeft() + lp.leftMargin;
             mEndSwiper.getMenuView().layout(
@@ -316,8 +322,8 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                     parentViewHeight + menuViewHeight);
         }
         if (mBeginSwiper != null) {
-            int menuViewWidth = ViewCompat.getMeasuredWidthAndState(mBeginSwiper.getMenuView());
-            int menuViewHeight = ViewCompat.getMeasuredHeightAndState(mBeginSwiper.getMenuView());
+            int menuViewWidth = mBeginSwiper.getMenuView().getMeasuredWidthAndState();
+            int menuViewHeight = mBeginSwiper.getMenuView().getMeasuredHeightAndState();
             lp = (LayoutParams) mBeginSwiper.getMenuView().getLayoutParams();
             lGap = getPaddingLeft() + lp.leftMargin;
             mBeginSwiper.getMenuView().layout(

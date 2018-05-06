@@ -1,6 +1,6 @@
 SwipeMenu
 =========
-A swipe menu for `horizontal/vertical`, support `left/right add top/bottom` directions, low coupling, can fast rapid integration into your project
+A swipe menu for `horizontal/vertical`, support `left/right and top/bottom` directions, low coupling, can fast rapid integration into your project
 
 Features
 ======== 

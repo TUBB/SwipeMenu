@@ -72,6 +72,22 @@ public abstract class SwipeMenuLayout extends FrameLayout {
         init();
     }
 
+    protected boolean handleActionUpOfIntercept(float mv) {
+        boolean isIntercepted = false;
+        // menu view opened and click on content view,
+        // we just close the menu view and intercept the up event
+        boolean isMenuOpened = isMenuOpened();
+        boolean isClickOnContentView = false;
+        if (mCurrentSwiper != null) {
+            isClickOnContentView = mCurrentSwiper.isClickOnContentView(this, mv);
+        }
+        if (isMenuOpened && isClickOnContentView) {
+            smoothCloseMenu();
+            isIntercepted = true;
+        }
+        return isIntercepted;
+    }
+
     public void smoothOpenBeginMenu() {
         if (mBeginSwiper == null) throw new IllegalArgumentException("No begin menu!");
         mCurrentSwiper = mBeginSwiper;
@@ -108,9 +124,15 @@ public abstract class SwipeMenuLayout extends FrameLayout {
         smoothCloseMenu(mScrollerDuration);
     }
 
+    protected abstract boolean isMenuOpened();
+
+    protected abstract boolean isSwiping();
+
+    protected abstract boolean isMenuOpenedNotEqual();
+
     /**
      * Not in the place, the swipe menu is swiping
-     * @return int the place or not
+     * @return in the place or not
      */
     public abstract boolean isNotInPlace();
 

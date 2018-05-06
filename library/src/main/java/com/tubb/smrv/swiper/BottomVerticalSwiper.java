@@ -13,12 +13,12 @@ public class BottomVerticalSwiper extends Swiper {
     }
 
     @Override
-    public boolean isMenuOpen(int scrollY) {
+    public boolean isMenuOpened(int scrollY) {
         return scrollY >= -getMenuView().getHeight() * getDirection();
     }
 
     @Override
-    public boolean isMenuOpenNotEqual(int scrollY) {
+    public boolean isMenuOpenedNotEqual(int scrollY) {
         return scrollY > -getMenuView().getHeight() * getDirection();
     }
 

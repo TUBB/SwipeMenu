@@ -21,8 +21,12 @@ public abstract class Swiper {
         mChecker = new Checker();
     }
 
-    public abstract boolean isMenuOpen(final int scrollDis);
-    public abstract boolean isMenuOpenNotEqual(final int scrollDis);
+    public boolean isSwiping(final int scrollDis) {
+        int absScrollDis = Math.abs(scrollDis);
+        return absScrollDis > 0 && absScrollDis < getMenuView().getWidth();
+    }
+    public abstract boolean isMenuOpened(final int scrollDis);
+    public abstract boolean isMenuOpenedNotEqual(final int scrollDis);
     public abstract void autoOpenMenu(OverScroller scroller, int scrollDis, int duration);
     public abstract void autoCloseMenu(OverScroller scroller, int scrollDis, int duration);
     public abstract Checker checkXY(int x, int y);

@@ -126,7 +126,7 @@ public class SwipeMenuScrollView extends ScrollView implements SwipeMenuHelper.C
                     int topY = menuLayout.getTop();
                     int height = menuLayout.getHeight();
                     if (realY >= topY && realY <= topY + height) {
-                        if (!menuLayout.isMenuOpen()) {
+                        if (!menuLayout.isMenuOpened()) {
                             closeOpenedMenu();
                         }
                         return menuLayout;
@@ -138,7 +138,7 @@ public class SwipeMenuScrollView extends ScrollView implements SwipeMenuHelper.C
 
         protected void closeOpenedMenu() {
             for (SwipeHorizontalMenuLayout menuLayout:menuLayoutList) {
-                if (menuLayout.isMenuOpen()) {
+                if (menuLayout.isMenuOpened()) {
                     menuLayout.smoothCloseMenu();
                 }
             }

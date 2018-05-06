@@ -13,12 +13,12 @@ public class LeftHorizontalSwiper extends Swiper {
     }
 
     @Override
-    public boolean isMenuOpen(int scrollX) {
+    public boolean isMenuOpened(int scrollX) {
         return scrollX <= -getMenuView().getWidth() * getDirection();
     }
 
     @Override
-    public boolean isMenuOpenNotEqual(int scrollX) {
+    public boolean isMenuOpenedNotEqual(int scrollX) {
         return scrollX < -getMenuView().getWidth() * getDirection();
     }
 
