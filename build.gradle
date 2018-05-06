@@ -23,7 +23,7 @@ allprojects {
         minSdkVersion=14
         targetSdkVersion=27
         supportVersion='27.1.1'
-        versionCode=34
-        versionName='5.4.6'
+        versionCode=35
+        versionName='5.4.7'
     }
 }
