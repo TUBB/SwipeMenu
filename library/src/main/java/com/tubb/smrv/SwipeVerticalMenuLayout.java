@@ -115,7 +115,7 @@ public class SwipeVerticalMenuLayout extends SwipeMenuLayout {
                 mVelocityTracker.computeCurrentVelocity(1000, mScaledMaximumFlingVelocity);
                 int velocityY = (int) mVelocityTracker.getYVelocity();
                 int velocity = Math.abs(velocityY);
-                if (isSwipeEnable() && velocity > mScaledMinimumFlingVelocity) {
+                if (velocity > mScaledMinimumFlingVelocity) {
                     if (mCurrentSwiper != null) {
                         int duration = getSwipeDuration(ev, velocity);
                         if (mCurrentSwiper instanceof BottomVerticalSwiper) {
