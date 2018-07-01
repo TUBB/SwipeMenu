@@ -116,7 +116,7 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
                 mVelocityTracker.computeCurrentVelocity(1000, mScaledMaximumFlingVelocity);
                 int velocityX = (int) mVelocityTracker.getXVelocity();
                 int velocity = Math.abs(velocityX);
-                if (isSwipeEnable() && velocity > mScaledMinimumFlingVelocity) {
+                if (velocity > mScaledMinimumFlingVelocity) {
                     if (mCurrentSwiper != null) {
                         int duration = getSwipeDuration(ev, velocity);
                         if (mCurrentSwiper instanceof RightHorizontalSwiper) {
