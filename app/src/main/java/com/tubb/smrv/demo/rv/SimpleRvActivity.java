@@ -84,6 +84,11 @@ public class SimpleRvActivity extends AbstractRvActivity {
             myViewHolder.tvSwipeEnable.setText(swipeEnable ? "swipe on" : "swipe off");
             myViewHolder.sml.setSwipeEnable(swipeEnable);
         }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position % 2 == 0 ? VIEW_TYPE_ENABLE : VIEW_TYPE_DISABLE;
+        }
     }
 
     public static class SimpleRvViewHolder extends RecyclerView.ViewHolder{
