@@ -87,16 +87,30 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
                 }
                 if (mDragging) {
                     if (mCurrentSwiper == null || shouldResetSwiper) {
-                        if (disX < 0) {
-                            if (mBeginSwiper != null)
-                                mCurrentSwiper = mBeginSwiper;
-                            else
-                                mCurrentSwiper = mEndSwiper;
+                        if (isRtl) {
+                            if (disX > 0) {
+                                if (mBeginSwiper != null)
+                                    mCurrentSwiper = mBeginSwiper;
+                                else
+                                    mCurrentSwiper = mEndSwiper;
+                            } else {
+                                if (mEndSwiper != null)
+                                    mCurrentSwiper = mEndSwiper;
+                                else
+                                    mCurrentSwiper = mBeginSwiper;
+                            }
                         } else {
-                            if (mEndSwiper != null)
-                                mCurrentSwiper = mEndSwiper;
-                            else
-                                mCurrentSwiper = mBeginSwiper;
+                            if (disX < 0) {
+                                if (mBeginSwiper != null)
+                                    mCurrentSwiper = mBeginSwiper;
+                                else
+                                    mCurrentSwiper = mEndSwiper;
+                            } else {
+                                if (mEndSwiper != null)
+                                    mCurrentSwiper = mEndSwiper;
+                                else
+                                    mCurrentSwiper = mBeginSwiper;
+                            }
                         }
                     }
                     scrollBy(disX, 0);
@@ -248,8 +262,13 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
         if (menuViewLeft == null && menuViewRight == null) {
             throw new IllegalArgumentException("Not find menuView by id (smMenuViewLeft, smMenuViewRight)");
         }
-        if (menuViewLeft != null) mBeginSwiper = new LeftHorizontalSwiper(menuViewLeft);
-        if (menuViewRight != null) mEndSwiper = new RightHorizontalSwiper(menuViewRight);
+        if (isRtl) {
+            if (menuViewLeft != null) mBeginSwiper = new RightHorizontalSwiper(menuViewLeft);
+            if (menuViewRight != null) mEndSwiper = new LeftHorizontalSwiper(menuViewRight);
+        } else {
+            if (menuViewLeft != null) mBeginSwiper = new LeftHorizontalSwiper(menuViewLeft);
+            if (menuViewRight != null) mEndSwiper = new RightHorizontalSwiper(menuViewRight);
+        }
     }
 
     @Override
@@ -307,20 +326,35 @@ public class SwipeHorizontalMenuLayout extends SwipeMenuLayout {
             int menuViewHeight = mEndSwiper.getMenuView().getMeasuredHeightAndState();
             lp = (LayoutParams) mEndSwiper.getMenuView().getLayoutParams();
             tGap = getPaddingTop() + lp.topMargin;
-            mEndSwiper.getMenuView().layout(parentViewWidth,
-                    tGap,
-                    parentViewWidth + menuViewWidth,
-                    tGap + menuViewHeight);
+            if (isRtl) {
+                mEndSwiper.getMenuView().layout(-menuViewWidth,
+                        tGap,
+                        0,
+                        tGap + menuViewHeight);
+            } else {
+                mEndSwiper.getMenuView().layout(parentViewWidth,
+                        tGap,
+                        parentViewWidth + menuViewWidth,
+                        tGap + menuViewHeight);
+            }
+
         }
         if (mBeginSwiper != null) {
             int menuViewWidth = mBeginSwiper.getMenuView().getMeasuredWidthAndState();
             int menuViewHeight = mBeginSwiper.getMenuView().getMeasuredHeightAndState();
             lp = (LayoutParams) mBeginSwiper.getMenuView().getLayoutParams();
             tGap = getPaddingTop() + lp.topMargin;
-            mBeginSwiper.getMenuView().layout(-menuViewWidth,
-                    tGap,
-                    0,
-                    tGap + menuViewHeight);
+            if (isRtl) {
+                mBeginSwiper.getMenuView().layout(parentViewWidth,
+                        tGap,
+                        parentViewWidth + menuViewWidth,
+                        tGap + menuViewHeight);
+            } else {
+                mBeginSwiper.getMenuView().layout(-menuViewWidth,
+                        tGap,
+                        0,
+                        tGap + menuViewHeight);
+            }
         }
     }
 

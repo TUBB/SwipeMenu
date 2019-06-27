@@ -2,6 +2,8 @@ package com.tubb.smrv;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.text.TextUtilsCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -48,6 +50,7 @@ public abstract class SwipeMenuLayout extends FrameLayout {
     protected SwipeSwitchListener mSwipeSwitchListener;
     protected SwipeFractionListener mSwipeFractionListener;
     protected NumberFormat mDecimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.US));
+    protected boolean isRtl = false;
 
     public SwipeMenuLayout(Context context) {
         this(context, null);
@@ -68,6 +71,7 @@ public abstract class SwipeMenuLayout extends FrameLayout {
             mScrollerDuration = a.getInteger(R.styleable.SwipeMenu_sml_scroller_duration, DEFAULT_SCROLLER_DURATION);
             a.recycle();
         }
+        isRtl = TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault()) == ViewCompat.LAYOUT_DIRECTION_RTL;
         init();
     }
 

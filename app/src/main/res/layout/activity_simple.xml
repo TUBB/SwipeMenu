@@ -14,16 +14,16 @@
             android:id="@+id/btLeftOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Left Open"
-            android:layout_alignParentLeft="true"
+            android:text="Open Start"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"/>
 
         <Button
             android:id="@+id/btLeftClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Left Close"
-            android:layout_toRightOf="@+id/btLeftOpen"
+            android:text="Close Start"
+            android:layout_toEndOf="@id/btLeftOpen"
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>
@@ -38,16 +38,16 @@
             android:id="@+id/btRightClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Right Close"
-            android:layout_alignParentRight="true"
+            android:text="Close End"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"/>
 
         <Button
             android:id="@+id/btRightOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Right Open"
-            android:layout_toLeftOf="@+id/btRightClose"
+            android:text="Open End"
+            android:layout_toStartOf="@id/btRightClose"
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>
@@ -69,16 +69,16 @@
                 android:id="@+id/btLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Left"
-                android:layout_alignParentLeft="true"
+                android:text="Start"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"/>
 
             <Button
                 android:id="@+id/btRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Right"
-                android:layout_alignParentRight="true"
+                android:text="End"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
@@ -92,7 +92,7 @@
             <View
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/holo_blue_light"/>
+                android:background="@color/cardview_dark_background"/>
 
         </LinearLayout>
 
@@ -105,7 +105,7 @@
             <View
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/holo_blue_light"/>
+                android:background="@color/white"/>
 
         </LinearLayout>
     </com.tubb.smrv.SwipeHorizontalMenuLayout>
